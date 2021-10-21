@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
@@ -30,7 +32,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 }
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    PessoaModel model = new PessoaModel();
+                    PessoaModel model;
 
                     if (id != null)
                     {
@@ -43,7 +45,9 @@ namespace api_target_desafio.SqlConnector.Connectors
                     }
                     while (reader.Read())
                     {
-
+                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                            reader.GetString(2), reader.GetDateTime(3),
+                            new Models.EnderecoModel(), new Models.FinanceiroModel());
                         _List.Add(model);
                     }
                 }
@@ -84,6 +88,47 @@ namespace api_target_desafio.SqlConnector.Connectors
             return false;
         }
 
-    
+        public override object ReadRelation(Dictionary<string,string> tables, int? id)
+        {
+
+       
+            List<object> _List = new List<object>();
+            string isWhere = id != null ? " WHERE Id=@ID" : "";
+            string commandText = $"SELECT pes.id, NomeCompleto, CPF, DataNascimento, c.RendaMensal FROM PessoaModel AS pes INNER JOIN FinanceiroModel AS c ON c.Id = pes.Id" + isWhere;
+            Connection.Open();
+            using (SqlCommand command = new SqlCommand(commandText, Connection))
+            {
+              
+                if (id != null)
+                {
+                    command.Parameters.Add(new SqlParameter($"@ID", id));
+                }
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    PessoaModel model;
+
+                    if (id != null)
+                    {
+                        reader.Read();
+
+                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                        reader.GetString(2), reader.GetDateTime(3), new Models.EnderecoModel(), new Models.FinanceiroModel(reader.GetInt32(4)));
+
+                        return model;
+                    }
+                    while (reader.Read())
+                    {
+                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+               reader.GetString(2), reader.GetDateTime(3), new Models.EnderecoModel(), new Models.FinanceiroModel(reader.GetInt32(4)));
+
+                        _List.Add(model);
+
+                        
+                    }
+                }
+            }
+            return _List;
+
+        }
     }
 }

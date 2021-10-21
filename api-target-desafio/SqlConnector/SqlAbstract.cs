@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace api_target_desafio.SqlConnector
@@ -16,6 +17,8 @@ namespace api_target_desafio.SqlConnector
         public abstract void CheckValidation();
 
         public abstract object Read(int? id);
+
+        public abstract object ReadRelation(Dictionary<string, string> tables, int? id);
 
         public abstract bool Insert(object model);
 

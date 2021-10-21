@@ -99,5 +99,10 @@ namespace api_target_desafio.SqlConnector.Connectors
             }
             return _List;
         }
+
+        public override object ReadRelation(Dictionary<string,string> tables, int? id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

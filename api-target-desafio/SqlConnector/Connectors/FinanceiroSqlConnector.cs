@@ -1,4 +1,5 @@
 ﻿using api_target_desafio.Models;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 
@@ -60,6 +61,11 @@ namespace api_target_desafio.SqlConnector.Connectors
       
 
         public override object Read(int? id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override object ReadRelation(Dictionary<string,string> tables, int? id)
         {
             throw new System.NotImplementedException();
         }

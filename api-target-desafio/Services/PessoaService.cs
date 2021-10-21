@@ -14,5 +14,10 @@ namespace api_target_desafio.Services
         {
             return connector.Read(id);
         }
+
+        public static object GetPessoaRelation(PessoaSqlConnector connector, Dictionary<string, string> tables,int? id)
+        {
+            return connector.ReadRelation(tables,id);
+        }
     }
 }
