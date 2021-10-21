@@ -1,5 +1,6 @@
 ﻿using api_target_desafio.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -15,13 +16,18 @@ namespace api_target_desafio.SqlConnector.Connectors
     {
         public override void CheckValidation()
         {
-            
-            throw new System.NotImplementedException();
+
+           
+
         }
 
         public PessoaSqlConnector()
         {
 
+        }
+        public bool CheckRenda()
+        {
+            return false;
         }
         public override object Read(int? id)
         {
@@ -63,34 +69,40 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         public override bool Insert(object model)
         {
-            if (model is PessoaModel pessoaInstance)
+            try
             {
-                int enderecoModel = 0;
-                int financeiroModel = 0;
-                if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
+                if (model is PessoaModel pessoaInstance)
                 {
-                    EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
-                    FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
-                    enderecoSqlConnector.Config(sConnection);
-                    financeiroSqlConnector.Config(sConnection);
-                    enderecoModel = enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
-                    financeiroModel = financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
+                    int enderecoModel = 0;
+                    int financeiroModel = 0;
+                    if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
+                    {
+                        EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
+                        FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
+                        enderecoSqlConnector.Config(sConnection);
+                        financeiroSqlConnector.Config(sConnection);
+                        enderecoModel = enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
+                        financeiroModel = financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
+                    }
+
+                    string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
+                    SqlCommand command = new SqlCommand(commandText, Connection);
+
+                    command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
+                    command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
+                    command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
+                    command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
+                    command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
+                    Connection.Open();
+                    command.ExecuteNonQuery();
+                    Connection.Close();
+                    return true;
                 }
-
-                string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
-                SqlCommand command = new SqlCommand(commandText, Connection);
-
-                command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
-                command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
-                command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
-                command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
-                command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
-                Connection.Open();
-                command.ExecuteNonQuery();
-                Connection.Close();
-                return true;
+                return false;
+            }catch(Exception e)
+            {
+                return false;
             }
-            return false;
         }
 
 
@@ -112,37 +124,40 @@ namespace api_target_desafio.SqlConnector.Connectors
             string isWhere = id != null ? "WHERE Id=@ID" : "";
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
             Connection.Open();
+            PessoaModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
-              
-                if (id != null)
-                {
-                    command.Parameters.Add(new SqlParameter($"@ID", id));
-                }
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    PessoaModel model;
+                    switch (id)
+                {
+                    case null:
+                            while (reader.Read())
+                            {
+                                model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                       reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4), reader.GetString(5),
+                       reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
+                                _List.Add(model);
+                            }
 
-                    if (id != null)
-                    {
+                            break;
+
+                    case not null:
+                        command.Parameters.Add(new SqlParameter($"@ID", id));
                         reader.Read();
-                       
+
                         model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
-               reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4), reader.GetString(5),
-               reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
+                         reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4), reader.GetString(5),
+                        reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
 
                         return model;
-                    }
-                    while (reader.Read())
-                    {
-                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
-               reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4),reader.GetString(5),
-               reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
 
-                        _List.Add(model);
+                }
+                
+              
+                    
 
-                        
-                    }
+                 
                 }
             }
             return _List;

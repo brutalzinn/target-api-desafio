@@ -44,16 +44,20 @@ namespace api_target_desafio.Controllers
         [HttpPost]
         public IActionResult Post(PessoaModel pessoa)
         {
+            if (!ModelState.IsValid)
+            {
+               return BadRequest(new { Cadastrado = false, });
+                // return Page();
+            }
 
-          //  PessoaConnector.CheckValidation();
+            PessoaConnector.CheckValidation();
     
 
-            PessoaService.RegisterPessoa(PessoaConnector, pessoa);
+           return Ok(PessoaService.RegisterPessoa(PessoaConnector, pessoa));
             //Response.StatusCode = StatusCodes.Status400BadRequest;
 
 
 
-            return Ok(new { cadastrado = true, });
 
         }
 

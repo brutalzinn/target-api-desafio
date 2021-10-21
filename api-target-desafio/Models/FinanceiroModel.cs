@@ -11,7 +11,7 @@
            
         }
         public int Id { get; set; }
-        public int RendaMensal { get; set; }
+        public decimal RendaMensal { get; set; }
 
     }
 }

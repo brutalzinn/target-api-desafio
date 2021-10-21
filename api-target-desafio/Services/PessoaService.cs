@@ -6,9 +6,22 @@ namespace api_target_desafio.Services
     public static class PessoaService
     {
 
-        public static void RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
+        public static object RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
         {
-            connector.Insert(pessoa);
+            bool QueryResult = connector.Insert(pessoa);
+            dynamic response = new { Cadastrado = true, OferecerPlanoVip = false };
+
+            if (!QueryResult)
+            {
+                response.Cadastrado = false;
+                return response;
+            }
+
+            if(pessoa.Financeiro.RendaMensal >= 6000M)
+            {
+                response.OferecerPlanoVip = true;
+            }
+            return response;
         }
         public static object GetPessoa(PessoaSqlConnector connector, int? id)
         {
