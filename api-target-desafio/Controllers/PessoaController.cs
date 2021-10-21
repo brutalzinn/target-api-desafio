@@ -1,4 +1,5 @@
 ﻿using api_target_desafio.SqlConnector.Connectors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -8,12 +9,16 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace api_target_desafio.Controllers
 {
+
     [ApiController]
     [Route("user")]
+    [Produces("application/json")]
+
     public class PessoaController : ControllerBase
     {
 
@@ -36,12 +41,18 @@ namespace api_target_desafio.Controllers
 
 
         [HttpPost]
-        public string Post(PessoaModel pessoa)
+        public IActionResult Post(PessoaModel pessoa)
         {
-           PessoaConnector.Insert(pessoa);
 
-            return "OK";
+            PessoaConnector.CheckValidation();
+            PessoaConnector.Insert(pessoa);
 
+          
+            //Response.StatusCode = StatusCodes.Status400BadRequest;
+     
+           
+
+             return Ok(new { cadastrado = true, });
 
         }
 
