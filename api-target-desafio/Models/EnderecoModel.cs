@@ -4,8 +4,9 @@ namespace api_target_desafio.Models
 {
     public class EnderecoModel
     {
-        public EnderecoModel(int id, string logradouro, string bairro, string cidade, string uF, string cEP, string complemento)
+        public EnderecoModel(int id = 0, string logradouro = "", string bairro = "", string cidade = "", string uF = "", string cEP = "", string complemento= "")
         {
+           
             Id = id;
             Logradouro = logradouro;
             Bairro = bairro;

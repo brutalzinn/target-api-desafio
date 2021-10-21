@@ -66,9 +66,8 @@ namespace api_target_desafio.Controllers
         [HttpGet("relation/{id?}")]
         public IActionResult RelationGet(int? id)
         {
-            Dictionary<string, string> models = new Dictionary<string, string>();
-           
-            return Ok(PessoaService.GetPessoaRelation(PessoaConnector, models,id));
+   
+            return Ok(PessoaService.GetPessoaRelation(PessoaConnector,id));
         }
 
 
