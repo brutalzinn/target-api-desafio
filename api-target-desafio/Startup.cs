@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -37,10 +38,22 @@ namespace api_target_desafio
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_target_desafio", Version = "v1" });
             });
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             //services.AddDbContext<api_target_desafioContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("api_target_desafioContext")));
 
+        }
+        private static void UserMiddleware(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+
+                await context.Response.WriteAsync("Map Test 1");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,16 +65,18 @@ namespace api_target_desafio
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "api_target_desafio v1"));
             }
+        
 
             app.UseHttpsRedirection();
             app.UseRouting();
            
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            app.Map("/user", UserMiddleware);
+
         }
     }
 }

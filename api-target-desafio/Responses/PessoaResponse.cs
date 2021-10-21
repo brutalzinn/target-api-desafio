@@ -11,5 +11,7 @@
         public bool OferecerPlanoVip { get; set; }
         public bool Cadastrado { get; set; }
 
+        public bool Error { get => !Cadastrado; }
+
     }
 }

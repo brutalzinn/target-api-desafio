@@ -7,7 +7,7 @@ namespace api_target_desafio.Services
     public static class PessoaService
     {
 
-        public static object RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
+        public static PessoaResponse RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
         {
             bool QueryResult = connector.Insert(pessoa);
             PessoaResponse response = new PessoaResponse(false, true);
