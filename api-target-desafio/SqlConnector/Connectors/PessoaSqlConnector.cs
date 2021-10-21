@@ -14,13 +14,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
     public class PessoaSqlConnector : SqlAbstract
     {
-        public override void CheckValidation()
-        {
-
-           
-
-        }
-
+  
         public PessoaSqlConnector()
         {
 
@@ -121,8 +115,9 @@ namespace api_target_desafio.SqlConnector.Connectors
             }
             _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
             List<object> _List = new List<object>();
-            string isWhere = id != null ? "WHERE Id=@ID" : "";
+            string isWhere = id != null ? "WHERE pes.Id=" +id : "";
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
+            Debug.WriteLine($"SQL:{commandText}");
             Connection.Open();
             PessoaModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
@@ -134,23 +129,51 @@ namespace api_target_desafio.SqlConnector.Connectors
                     case null:
                             while (reader.Read())
                             {
-                                model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
-                       reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4), reader.GetString(5),
-                       reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
-                                _List.Add(model);
+                                    model = new PessoaModel();
+
+                                    model.Id = reader.GetInt32(0);
+                                    model.NomeCompleto = reader.GetString(1);
+                                    model.CPF = reader.GetString(2);
+                                    model.DataNascimento = reader.GetDateTime(3);
+
+                                    model.Endereco = new EnderecoModel();
+
+                                    model.Endereco.Id = reader.GetInt32(4);
+                                    model.Endereco.Logradouro = reader.GetString(5);
+                                    model.Endereco.Bairro = reader.GetString(6);    
+                                    model.Endereco.Cidade = reader.GetString(7);
+                                    model.Endereco.UF = reader.GetString(8);
+                                    model.Endereco.CEP = reader.GetString(9);
+                                    model.Endereco.Complemento = reader.GetString(10);
+                                    model.Financeiro = new FinanceiroModel(reader.GetDecimal(11));                                                      
+                                    _List.Add(model);
                             }
 
                             break;
 
                     case not null:
-                        command.Parameters.Add(new SqlParameter($"@ID", id));
-                        reader.Read();
+                       
+                            reader.Read();
 
-                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
-                         reader.GetString(2), reader.GetDateTime(3), new EnderecoModel(reader.GetInt32(4), reader.GetString(5),
-                        reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)), new FinanceiroModel(reader.GetInt32(11)));
+                            model = new PessoaModel();
 
-                        return model;
+                            model.Id = reader.GetInt32(0);
+                            model.NomeCompleto = reader.GetString(1);
+                            model.CPF = reader.GetString(2);
+                            model.DataNascimento = reader.GetDateTime(3);
+
+                            model.Endereco = new EnderecoModel();
+
+                            model.Endereco.Id = reader.GetInt32(4);
+                            model.Endereco.Logradouro = reader.GetString(5);
+                            model.Endereco.Bairro = reader.GetString(6);
+                            model.Endereco.Cidade = reader.GetString(7);
+                            model.Endereco.UF = reader.GetString(8);
+                            model.Endereco.CEP = reader.GetString(9);
+                            model.Endereco.Complemento = reader.GetString(10);
+                            model.Financeiro = new FinanceiroModel(reader.GetDecimal(11)); 
+                            
+                            return model;
 
                 }
                 

@@ -2,7 +2,7 @@
 {
     public class FinanceiroModel
     {
-        public FinanceiroModel(int rendaMensal)
+        public FinanceiroModel(decimal rendaMensal)
         {
             RendaMensal = rendaMensal;
         }

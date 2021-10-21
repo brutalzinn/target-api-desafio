@@ -14,8 +14,6 @@ namespace api_target_desafio.SqlConnector
             Connection = new SqlConnection(sConnection);
         }
 
-        public abstract void CheckValidation();
-
         public abstract object Read(int? id);
 
         public abstract object ReadRelation(Dictionary<string, string> tables, int? id);

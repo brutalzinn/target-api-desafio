@@ -7,12 +7,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 {
     public class FinanceiroSqlConnector : SqlAbstract
     {
-        public override void CheckValidation()
-        {
-
-            throw new System.NotImplementedException();
-        }
-
+    
         public FinanceiroSqlConnector()
         {
 
