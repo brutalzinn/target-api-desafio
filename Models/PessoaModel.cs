@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio
 {
@@ -8,7 +9,8 @@ namespace api_target_desafio
     public string NomeCompleto { get; set; }
 
     public string CPF { get; set; }
-
+    
+    [DataType(DataType.Date)]
     public DateTime DataNascimento { get; set; }
 
     }
