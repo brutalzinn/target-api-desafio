@@ -1,6 +1,7 @@
 using api_target_desafio.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,10 +32,10 @@ namespace api_target_desafio
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_target_desafio", Version = "v1" });
             });
-            //services.Configure<ApiBehaviorOptions>(options =>
-            //{
-            //    options.SuppressModelStateInvalidFilter = true;
-            //});
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             services.AddHttpContextAccessor();
 
             //services.AddDbContext<api_target_desafioContext>(options =>

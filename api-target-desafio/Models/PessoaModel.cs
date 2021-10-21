@@ -1,4 +1,5 @@
 using api_target_desafio.Models;
+using api_target_desafio.Validators;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,26 +7,21 @@ namespace api_target_desafio
 {
     public class PessoaModel : BaseModel
     {
-        public PessoaModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
-        {
-            Id = id;
-            NomeCompleto = nomeCompleto;
-            CPF = cPF;
-            DataNascimento = dataNascimento;
-            Endereco = endereco;
-            Financeiro = financeiro;
-        }
-        public PessoaModel()
-        {
+    public PessoaModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
+    {
+        Id = id;
+        NomeCompleto = nomeCompleto;
+        CPF = cPF;
+        DataNascimento = dataNascimento;
+        Endereco = endereco;
+        Financeiro = financeiro;
+    }
+    public PessoaModel()
+    {
 
-        }
+    }
 
-        //public PessoaModel()
-        //{
-        //    Endereco = new EnderecoModel();
-        //    Financeiro = new FinanceiroModel();
-        //}
-        [Key]
+    [Key]
     public int Id { get; set; }
     public string NomeCompleto { get; set; }
 
@@ -37,10 +33,15 @@ namespace api_target_desafio
     public EnderecoModel Endereco { get; set; }
 
     public FinanceiroModel Financeiro { get; set; }
-        public override string GetName()
-        {
+     public override string GetName()
+     {
             return "PessoaModel";
-        }
+     }
 
+     public override bool Validator(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary model)
+      {
+           return PessoaValidator.Validate(this,model);
+           
+     }
     }
 }

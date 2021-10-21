@@ -1,8 +1,10 @@
-﻿using api_target_desafio.Services;
+﻿using api_target_desafio.Responses;
+using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
 using api_target_desafio.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -43,25 +45,26 @@ namespace api_target_desafio.Controllers
 
 
         [HttpPost]
+     
+
         public IActionResult Post(PessoaModel pessoa)
         {
-          
-
+            List<ModelError> ErrorList = new List<ModelError>();
             var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
-
             
+            if(!pessoa.Validator(ModelState))
+            {
+                PessoaResponse teste = new PessoaResponse();
+                teste.Text = "TESTE ERROR VALIDATOR";
+                return BadRequest(teste);
+            }          
             switch (ServiceQuery.Error)
             {
                 case true:
                     return BadRequest(ServiceQuery);
                 case false:
                     return Ok(ServiceQuery);
-
             }
-
-
-
-
         }
 
         [HttpGet("{id?}")]

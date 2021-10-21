@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio.Models
 {
@@ -38,6 +39,11 @@ namespace api_target_desafio.Models
         public override string GetName()
         {
             return "EnderecoModel";
+        }
+
+        public override bool Validator(ModelStateDictionary model)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

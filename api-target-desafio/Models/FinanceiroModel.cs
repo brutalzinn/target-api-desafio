@@ -1,4 +1,6 @@
-﻿namespace api_target_desafio.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace api_target_desafio.Models
 {
     public class FinanceiroModel : BaseModel
     {
@@ -15,6 +17,11 @@
         public override string GetName()
         {
             return "FinanceiroModel";
+        }
+
+        public override bool Validator(ModelStateDictionary model)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
