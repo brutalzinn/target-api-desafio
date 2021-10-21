@@ -16,27 +16,39 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
 
         }
-        public override List<PessoaModel> Read(int? id)
+        public override object Read(int? id)
         {
             List <PessoaModel> _List = new List <PessoaModel>();
-            string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + id != null ? $"WHERE Id = {id}" : "";
+            string isWhere = id != null ? " WHERE Id=@ID" : "";
+            string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + isWhere;
             Connection.Open();
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
+                if (id != null)
+                {
+                    command.Parameters.Add(new SqlParameter($"@ID", id));
+                }
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
+                    PessoaModel model = new PessoaModel();
+
+                    if (id != null)
+                    {
+                        reader.Read();
+                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                            reader.GetString(2), reader.GetDateTime(3),
+                            new Models.EnderecoModel(), new Models.FinanceiroModel());
+
+                        return model;
+                    }
                     while (reader.Read())
                     {
 
-                        _List.Add(new PessoaModel(reader.GetInt32(0), reader.GetString(1),
-                            reader.GetString(2), reader.GetDateTime(3),
-                            new Models.EnderecoModel(),new Models.FinanceiroModel()));
+                        _List.Add(model);
                     }
                 }
             }
-
             return _List;
-
 
         }
 

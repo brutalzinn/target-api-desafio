@@ -15,6 +15,10 @@ namespace api_target_desafio
             Endereco = endereco;
             Financeiro = financeiro;
         }
+        public PessoaModel()
+        {
+
+        }
 
         //public PessoaModel()
         //{

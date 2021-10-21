@@ -10,7 +10,7 @@ namespace api_target_desafio.Services
         {
             connector.Insert(pessoa);
         }
-        public static List<PessoaModel> GetPessoa(PessoaSqlConnector connector, int? id)
+        public static object GetPessoa(PessoaSqlConnector connector, int? id)
         {
             return connector.Read(id);
         }
