@@ -10,28 +10,27 @@ namespace api_target_desafio.Utils
 {
     public class SqlConnector
     {
-        public static void Query(string query)
-        {
-
-        }
+     
         private string ModelName { get; set; } = String.Empty;
 
         private string connStr = String.Empty;
 
+        private BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+
         private List<string> ModelObject { get; set; } = new List<string>();
+
+      
         public SqlConnector(object classReference, string connection)
         {
             connStr = connection;
-            string modelName = classReference.GetType().Name;
-            var bindingFlags = BindingFlags.Instance |
-                         BindingFlags.NonPublic |
-                         BindingFlags.Public;
+            ModelName = classReference.GetType().Name;
+      
             var fieldValues = classReference.GetType()
                                  .GetFields(bindingFlags).ToList();
             foreach (var fields in fieldValues)
             {
-                Debug.WriteLine(fields.GetValue(classReference));
-                MatchCollection matches = Regex.Matches(fields.Name, @"<(.*)>");
+                
+                 MatchCollection matches = Regex.Matches(fields.Name, @"<(.*)>");
                foreach(Match match in matches)
                 {
                     ModelObject.Add(match.Groups[1].ToString());
@@ -40,21 +39,33 @@ namespace api_target_desafio.Utils
 
             }
         }
-        private List<SqlParameter> ParamGenerator(dynamic instance)
+        private bool getMatchFields(string field, string value)
         {
-            List<SqlParameter> _list = null;
+            Debug.WriteLine($"COMPARE {field} {value}");
+            return Regex.Matches(field, @"<(.*)>").ToList().Any(e => e.Groups[1].ToString().Contains(value));
+         
+        }
+        private List<SqlParameter> ParamGenerator(object classReference)
+        {
+            List<SqlParameter> _list = new List<SqlParameter>();
+            var fieldValue = classReference.GetType().GetFields(bindingFlags).ToList();
             foreach (string Field in ModelObject)
             {
-                if (Field != "Id")
-                {
-                    Debug.WriteLine($"{Field.ToUpper()}, {instance}");
-                  //  _list.Add(new SqlParameter($"@{Field.ToUpper()}", instance[Field]));
+               
+                    Debug.WriteLine($"FIELD:{Field}");
+                    var item = fieldValue.FirstOrDefault(f => getMatchFields(f.Name,Field));
+                    if(item != null && Field != "Id")
+                    //Debug.WriteLine($"{Field.ToUpper()}, {fieldValue}");
+                    _list.Add(new SqlParameter($"@{Field.ToUpper()}", item.GetValue(classReference)));
                     
-                }
+                
             }
             return _list;
         }
-        public void Insert(dynamic classReference)
+
+        // TODO: WE NEED TO REFACTOR THIS FUNCTION AND EXPAND IT TO ALL OTHERS METHODS
+
+        public void Insert(object classReference)
         {
             string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO)";
             var connection = new SqlConnection(connStr);

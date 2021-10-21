@@ -17,6 +17,8 @@ namespace api_target_desafio.Controllers
     public class PessoaController : ControllerBase
     {
 
+        // TODO: WE NEED TO REFACTOR THIS CONTROLLER TO USE SERVICES.
+
 
         public IConfiguration Configuration { get; }
         public SqlConnector SqlConnector { get; set; }
@@ -25,11 +27,8 @@ namespace api_target_desafio.Controllers
         public  PessoaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
-           
-           
-             connStr = Configuration.GetConnectionString("app_target_api");
+            connStr = Configuration.GetConnectionString("app_target_api");
             SqlConnector = new SqlConnector(new PessoaModel(), connStr);
-
         }
 
 
