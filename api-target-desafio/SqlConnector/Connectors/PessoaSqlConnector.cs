@@ -22,22 +22,26 @@ namespace api_target_desafio.SqlConnector.Connectors
 
           if(model is PessoaModel pessoaInstance)
             {
-                Debug.WriteLine(pessoaInstance.Endereco.Logradouro);
                 int enderecoModel = 0;
-                if (pessoaInstance != null && pessoaInstance.Endereco != null)
+                int financeiroModel = 0;
+                if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
                 {
                     EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
+                    FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
                     enderecoSqlConnector.Config(sConnection);
+                    financeiroSqlConnector.Config(sConnection);
                     enderecoModel = enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
+                    financeiroModel = financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
                 }
 
-                string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL)";
+                string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
                 SqlCommand command = new SqlCommand(commandText, Connection);
             
                 command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
                 command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
                 command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
                 command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
+                command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
 
                 Connection.Open();
                 command.ExecuteNonQuery();
