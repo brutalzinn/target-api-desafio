@@ -1,4 +1,5 @@
-﻿using api_target_desafio.SqlConnector.Connectors;
+﻿using api_target_desafio.Responses;
+using api_target_desafio.SqlConnector.Connectors;
 using System.Collections.Generic;
 
 namespace api_target_desafio.Services
@@ -9,8 +10,7 @@ namespace api_target_desafio.Services
         public static object RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
         {
             bool QueryResult = connector.Insert(pessoa);
-            dynamic response = new { Cadastrado = true, OferecerPlanoVip = false };
-
+            PessoaResponse response = new PessoaResponse(false, true);
             if (!QueryResult)
             {
                 response.Cadastrado = false;
