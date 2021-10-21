@@ -60,5 +60,11 @@ namespace api_target_desafio.SqlConnector.Connectors
             }
             return false;
         }
+
+    
+        public override object Read(int? id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

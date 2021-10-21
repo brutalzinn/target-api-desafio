@@ -15,6 +15,8 @@ namespace api_target_desafio.SqlConnector
 
         public abstract void CheckValidation();
 
+        public abstract object Read(int? id);
+
         public abstract bool Insert(object model);
 
         public virtual int InsertRelation(object model)

@@ -1,4 +1,5 @@
-﻿using api_target_desafio.SqlConnector.Connectors;
+﻿using api_target_desafio.Services;
+using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -44,25 +45,26 @@ namespace api_target_desafio.Controllers
         public IActionResult Post(PessoaModel pessoa)
         {
 
-            PessoaConnector.CheckValidation();
-            PessoaConnector.Insert(pessoa);
+          //  PessoaConnector.CheckValidation();
+    
 
-          
+            PessoaService.RegisterPessoa(PessoaConnector, pessoa);
             //Response.StatusCode = StatusCodes.Status400BadRequest;
-     
-           
 
-             return Ok(new { cadastrado = true, });
+
+
+            return Ok(new { cadastrado = true, });
 
         }
 
-
-        [HttpGet]
-        public async Task<string> Get(PessoaModel pessoa)
-        {
-            Debug.WriteLine("TESTE");
-           
-            return "";
+        [HttpGet("{id?}")]
+        public IActionResult Get(int? id)
+        {           
+            return Ok(PessoaService.GetPessoa(PessoaConnector, id));
         }
+
+
+
+      
     }
 }
