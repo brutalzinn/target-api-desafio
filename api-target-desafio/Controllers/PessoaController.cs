@@ -1,5 +1,6 @@
 ﻿using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
+using api_target_desafio.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -46,11 +47,13 @@ namespace api_target_desafio.Controllers
         {
             if (!ModelState.IsValid)
             {
-               return BadRequest(new { Cadastrado = false, });
+               return BadRequest(new { Cadastrado = false });
                 // return Page();
             }
 
-            PessoaConnector.CheckValidation();
+            PessoaValidator.Validate(pessoa);
+
+         //   validator.Validate(this)
     
 
            return Ok(PessoaService.RegisterPessoa(PessoaConnector, pessoa));

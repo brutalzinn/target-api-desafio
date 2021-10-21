@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio
 {
-    public class PessoaModel
+    public class PessoaModel : BaseModel
     {
         public PessoaModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
         {
@@ -37,7 +37,10 @@ namespace api_target_desafio
     public EnderecoModel Endereco { get; set; }
 
     public FinanceiroModel Financeiro { get; set; }
-
+        public override string GetName()
+        {
+            return "PessoaModel";
+        }
 
     }
 }

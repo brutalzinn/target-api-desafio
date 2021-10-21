@@ -2,7 +2,7 @@
 
 namespace api_target_desafio.Models
 {
-    public class EnderecoModel
+    public class EnderecoModel : BaseModel
     {
         public EnderecoModel(int id = 0, string logradouro = "", string bairro = "", string cidade = "", string uF = "", string cEP = "", string complemento= "")
         {
@@ -35,6 +35,9 @@ namespace api_target_desafio.Models
 
         public string Complemento { get; set; }
 
-
+        public override string GetName()
+        {
+            return "EnderecoModel";
+        }
     }
 }
