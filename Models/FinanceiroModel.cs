@@ -2,6 +2,7 @@
 {
     public class FinanceiroModel
     {
+        public int Id { get; set; }
         public int RendaMensal { get; set; }
 
     }

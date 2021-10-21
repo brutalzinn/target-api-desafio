@@ -1,3 +1,4 @@
+using api_target_desafio.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,9 +10,17 @@ namespace api_target_desafio
     public string NomeCompleto { get; set; }
 
     public string CPF { get; set; }
-    
-    [DataType(DataType.Date)]
+
+
+
+
+
     public DateTime DataNascimento { get; set; }
+
+    public EnderecoModel Endereco { get; set; }
+
+    public FinanceiroModel Financeiro { get; set; }
+
 
     }
 }

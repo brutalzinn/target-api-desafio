@@ -1,4 +1,4 @@
-﻿using api_target_desafio.Utils;
+﻿using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,29 +21,24 @@ namespace api_target_desafio.Controllers
 
 
         public IConfiguration Configuration { get; }
-        public SqlConnector SqlConnector { get; set; }
+        private PessoaSqlConnector PessoaConnector { get; set; } = new PessoaSqlConnector();
 
         public string connStr = String.Empty;
         public  PessoaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
             connStr = Configuration.GetConnectionString("app_target_api");
-            SqlConnector = new SqlConnector(new PessoaModel(), connStr);
+            PessoaConnector.Config(connStr);
+
+
         }
 
 
 
         [HttpPost]
-        public async Task<string> Post(PessoaModel pessoa)
+        public string Post(PessoaModel pessoa)
         {
-
-
-
-            SqlConnector.Insert(pessoa);
-;
-
-
-
+           PessoaConnector.Insert(pessoa);
 
             return "OK";
                

@@ -35,7 +35,7 @@ namespace api_target_desafio
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_target_desafio", Version = "v1" });
             });
-
+        
             //services.AddDbContext<api_target_desafioContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("api_target_desafioContext")));
 
