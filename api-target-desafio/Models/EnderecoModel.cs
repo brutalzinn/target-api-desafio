@@ -1,8 +1,10 @@
-﻿namespace api_target_desafio.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace api_target_desafio.Models
 {
     public class EnderecoModel
     {
-
+        [Key]
         public int Id { get; set; }
 
         public string Logradouro { get; set; }

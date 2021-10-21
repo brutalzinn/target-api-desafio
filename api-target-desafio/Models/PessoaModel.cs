@@ -6,13 +6,16 @@ namespace api_target_desafio
 {
     public class PessoaModel
     {
+        //public PessoaModel()
+        //{
+        //    Endereco = new EnderecoModel();
+        //    Financeiro = new FinanceiroModel();
+        //}
+    [Key]
     public int Id { get; set; }
     public string NomeCompleto { get; set; }
 
     public string CPF { get; set; }
-
-
-
 
 
     public DateTime DataNascimento { get; set; }
