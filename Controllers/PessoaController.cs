@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using api_target_desafio.Utils;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,6 +19,7 @@ namespace api_target_desafio.Controllers
 
 
         public IConfiguration Configuration { get; }
+        public SqlConnector SqlConnector { get; set; }
 
         public string connStr = String.Empty;
         public  PessoaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
@@ -26,40 +28,24 @@ namespace api_target_desafio.Controllers
            
            
              connStr = Configuration.GetConnectionString("app_target_api");
-            
+            SqlConnector = new SqlConnector(new PessoaModel(), connStr);
+
         }
-  
+
 
 
         [HttpPost]
         public async Task<string> Post(PessoaModel pessoa)
         {
-            string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO)";
-            using (var connection = new SqlConnection(connStr))
-            {
-          
-               
-                    using (var command = new SqlCommand(commandText, connection))
-                    {
-                        try
-                        {
-                            command.Parameters.Add(new SqlParameter("@NOMECOMPLETO", pessoa.NomeCompleto));
-                            command.Parameters.Add(new SqlParameter("@CPF", pessoa.CPF));
-                            command.Parameters.Add(new SqlParameter("@DATANASCIMENTO", pessoa.DataNascimento));
-                            await connection.OpenAsync();
-                            await command.ExecuteNonQueryAsync();
-                        }
-                        catch (Exception e)
-                        {
-                            return "ERROR";
-                        }
 
 
-                        }
-                
-                           
-                
-            }
+
+            SqlConnector.Insert(pessoa);
+;
+
+
+
+
             return "OK";
                
         }
