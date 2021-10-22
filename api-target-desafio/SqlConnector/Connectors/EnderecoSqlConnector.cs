@@ -1,7 +1,9 @@
 ﻿using api_target_desafio.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
@@ -9,9 +11,9 @@ namespace api_target_desafio.SqlConnector.Connectors
      public class EnderecoSqlConnector : SqlAbstract
     {
       
-        public EnderecoSqlConnector()
+        public EnderecoSqlConnector(string conn)
         {
-
+            Config(conn);
         }
         public override async Task<int> InsertRelation(object model)
         {
@@ -58,7 +60,37 @@ namespace api_target_desafio.SqlConnector.Connectors
             return false;
         }
 
+        public override async Task<bool> Update(object body, int id)
+        {
+            try
+            {
+                StringBuilder SQL_BUILDER = new StringBuilder();
+                SQL_BUILDER.Append("UPDATE EnderecoModel SET ");
+                if (body is EnderecoModel enderecoInstance)
+                {
+                    SQL_BUILDER.Append($"UF = '{enderecoInstance.UF}',");
+                    SQL_BUILDER.Append($"Cidade = '{enderecoInstance.Cidade}',");
+                    SQL_BUILDER.Append($"Bairro = '{enderecoInstance.Bairro}',");
+                    SQL_BUILDER.Append($"CEP = '{enderecoInstance.CEP}',");
+                    SQL_BUILDER.Append($"Complemento = '{enderecoInstance.Complemento}',");
+                    SQL_BUILDER.Append($"Logradouro = '{enderecoInstance.Logradouro}' ");
+                }
 
+                SQL_BUILDER.Append($"WHERE Id = {id}");
+               
+
+                SqlCommand command = new SqlCommand(SQL_BUILDER.ToString(), Connection);
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await Connection.CloseAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
         public override async Task<object> Read(int? id)
         {
             List<EnderecoModel> _List = new List<EnderecoModel>();

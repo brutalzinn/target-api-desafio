@@ -27,8 +27,9 @@ namespace api_target_desafio.Controllers
     {
         // TODO: WE NEED TO REFACTOR THIS CONTROLLER TO USE SERVICES.
         public IConfiguration Configuration { get; }
-        private PessoaSqlConnector PessoaConnector { get; set; } = new PessoaSqlConnector();
         public string connStr = String.Empty;
+
+        private PessoaSqlConnector PessoaConnector { get; set; } = new PessoaSqlConnector();
         public  PessoaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -59,8 +60,8 @@ namespace api_target_desafio.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(PessoaModel pessoa,int id)
         {
-            return Ok();
-            //return Ok(PessoaService.GetPessoaRelation(PessoaConnector, pessoa, id));
+          
+            return Ok(PessoaService.Update(PessoaConnector, pessoa, id));
 
         }
 

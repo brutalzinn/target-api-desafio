@@ -42,20 +42,13 @@ namespace api_target_desafio.Services
         }
 
         public static object CompareDates(PessoaSqlConnector connector, DateTime start,DateTime end)
-        {
-
-     
+        {     
             return Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
         }
 
         public static object Update(PessoaSqlConnector connector, PessoaModel pessoa, int id)
         {
-            Dictionary<string, string> tables = new Dictionary<string, string>();
-
-            tables.Add("FinanceiroModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento");
-            tables.Add("EnderecoModel", "RendaMensal");
-            return false;
-            // return Task.Run(() => connector.Update()).Result;
+            return Task.Run(() => connector.Update(pessoa,id)).Result;
         }
     }
 }

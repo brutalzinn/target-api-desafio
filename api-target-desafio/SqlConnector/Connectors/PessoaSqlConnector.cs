@@ -16,15 +16,20 @@ namespace api_target_desafio.SqlConnector.Connectors
 
     public class PessoaSqlConnector : SqlAbstract
     {
-  
+
         public PessoaSqlConnector()
         {
 
         }
-        public bool CheckRenda()
+         public PessoaSqlConnector(string conn)
         {
-            return false;
+            Config(conn);
         }
+        private Dictionary<string, string> tables = new Dictionary<string, string>()
+      {
+          {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+          {"FinanceiroModel", "fina.Id,RendaMensal" }
+      };
         public override async Task<object> Read(int? id)
         {
             List <PessoaModel> _List = new List <PessoaModel>();
@@ -62,45 +67,36 @@ namespace api_target_desafio.SqlConnector.Connectors
             return _List;
 
         }
-        //public override async Task<bool> Update(PessoaModel pessoa,int id)
-        //{
-        //    return false;
-        //    //try
-        //    //{
-        //    //    if (model is PessoaModel pessoaInstance)
-        //    //    {
-        //    //        int enderecoModel = 0;
-        //    //        int financeiroModel = 0;
-        //    //        if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
-        //    //        {
-        //    //            EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
-        //    //            FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
-        //    //            enderecoSqlConnector.Config(sConnection);
-        //    //            financeiroSqlConnector.Config(sConnection);
-        //    //            enderecoModel = await enderecoSqlConnector.Read(pessoaInstance.Endereco.Id);
-        //    //            financeiroModel = await financeiroSqlConnector.Read(pessoaInstance.Financeiro.Id);
-        //    //        }
+        public override async Task<bool> Update(object body, int id)
+        {
+            try
+            {
 
-        //    //        string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
-        //    //        SqlCommand command = new SqlCommand(commandText, Connection);
+                PessoaModel pessoa = (PessoaModel) await ReadRelation(tables,id);
+                Debug.WriteLine($"TESTING WITH {pessoa.NomeCompleto}-Financeiro:{pessoa.Financeiro.RendaMensal}");
+                FinanceiroSqlConnector Financeiro = new FinanceiroSqlConnector(sConnection);
+                EnderecoSqlConnector Endereco = new EnderecoSqlConnector(sConnection);
 
-        //    //        command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
-        //    //        command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
-        //    //        command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
-        //    //        command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
-        //    //        command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
-        //    //        await Connection.OpenAsync();
-        //    //        await command.ExecuteNonQueryAsync();
-        //    //        await Connection.CloseAsync();
-        //    //        return true;
-        //    //    }
-        //    //    return false;
-        //    //}
-        //    //catch (Exception e)
-        //    //{
-        //    //    return false;
-        //    //}
-        //}
+                if (body is PessoaModel pessoaInstance)
+                {
+
+              
+                    await Financeiro.Update(pessoaInstance.Financeiro, pessoa.Financeiro.Id);
+                    await Endereco.Update(pessoaInstance.Endereco, pessoa.Endereco.Id);
+
+
+                }
+
+
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
         public override async Task<bool> Insert(object model)
         {
             try
@@ -111,10 +107,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                     int financeiroModel = 0;
                     if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
                     {
-                        EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
-                        FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
-                        enderecoSqlConnector.Config(sConnection);
-                        financeiroSqlConnector.Config(sConnection);
+                        EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector(sConnection);
+                        FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector(sConnection);
                         enderecoModel = await enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
                         financeiroModel = await financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
                     }

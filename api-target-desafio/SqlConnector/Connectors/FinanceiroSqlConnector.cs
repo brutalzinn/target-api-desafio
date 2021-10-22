@@ -1,7 +1,9 @@
 ﻿using api_target_desafio.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
@@ -9,9 +11,9 @@ namespace api_target_desafio.SqlConnector.Connectors
     public class FinanceiroSqlConnector : SqlAbstract
     {
     
-        public FinanceiroSqlConnector()
+        public FinanceiroSqlConnector(string conn)
         {
-
+            Config(conn);
         }
         public override async Task<int> InsertRelation(object model)
         {
@@ -30,6 +32,29 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return modified;
             }
             return 0;
+        }
+
+        public override async Task<bool> Update(object body,int id)
+        {
+            try
+            {
+                StringBuilder SQL_BUILDER = new StringBuilder();
+                SQL_BUILDER.Append("UPDATE FinanceiroModel SET ");
+                if (body is FinanceiroModel pessoaInstance)
+                {
+                    SQL_BUILDER.Append($"RendaMensal = {pessoaInstance.RendaMensal} ");
+                }
+                SQL_BUILDER.Append($"WHERE Id = {id}");
+                SqlCommand command = new SqlCommand(SQL_BUILDER.ToString(), Connection);
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await Connection.CloseAsync();
+                return true;
+            }catch(Exception e)
+            {
+                return false;
+            }
+           
         }
 
         public override async Task<bool> Insert(object model)
