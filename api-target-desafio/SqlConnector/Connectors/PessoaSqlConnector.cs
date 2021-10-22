@@ -1,19 +1,14 @@
 ﻿using api_target_desafio.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
-{        
-    
-    
+{
     //WE NEED REFACTOR ALL QUERY BUILDERS TWO DAYS BEFORE DISPATCH THE CHALLENGER
-
     public class PessoaSqlConnector : SqlAbstract
     {
 
@@ -21,18 +16,18 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
 
         }
-         public PessoaSqlConnector(string conn)
+        public PessoaSqlConnector(string conn)
         {
             Config(conn);
         }
         private Dictionary<string, string> tables = new Dictionary<string, string>()
-      {
-          {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
-          {"FinanceiroModel", "fina.Id,RendaMensal" }
-      };
+            {
+                {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+                {"FinanceiroModel", "fina.Id,RendaMensal" }
+            };
         public override async Task<object> Read(int? id)
         {
-            List <PessoaModel> _List = new List <PessoaModel>();
+            List<PessoaModel> _List = new List<PessoaModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
             string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + isWhere;
             await Connection.OpenAsync();
@@ -48,7 +43,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
                     if (id != null)
                     {
-                     await reader.ReadAsync();
+                        await reader.ReadAsync();
                         model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDateTime(3),
                             new Models.EnderecoModel(), new Models.FinanceiroModel());
@@ -71,25 +66,16 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
-
-                PessoaModel pessoa = (PessoaModel) await ReadRelation(tables,id);
+                PessoaModel pessoa = (PessoaModel)await ReadRelation(tables, id);
                 Debug.WriteLine($"TESTING WITH {pessoa.NomeCompleto}-Financeiro:{pessoa.Financeiro.RendaMensal}");
                 FinanceiroSqlConnector Financeiro = new FinanceiroSqlConnector(sConnection);
                 EnderecoSqlConnector Endereco = new EnderecoSqlConnector(sConnection);
 
                 if (body is PessoaModel pessoaInstance)
                 {
-
-              
                     await Financeiro.Update(pessoaInstance.Financeiro, pessoa.Financeiro.Id);
                     await Endereco.Update(pessoaInstance.Endereco, pessoa.Endereco.Id);
-
-
                 }
-
-
-
-
                 return true;
             }
             catch (Exception e)
@@ -122,17 +108,18 @@ namespace api_target_desafio.SqlConnector.Connectors
                     command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
                     command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
                     await Connection.OpenAsync();
-                   await  command.ExecuteNonQueryAsync();
-                  await  Connection.CloseAsync();
+                    await command.ExecuteNonQueryAsync();
+                    await Connection.CloseAsync();
                     return true;
                 }
                 return false;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return false;
             }
         }
-        public override async Task<object> RangeDateTime(Dictionary<string, string> tables,DateTime start, DateTime end)
+        public override async Task<object> RangeDateTime(Dictionary<string, string> tables, DateTime start, DateTime end)
         {
             await Connection.OpenAsync();
             StringBuilder _SQL_JOIN = new StringBuilder();
@@ -147,40 +134,34 @@ namespace api_target_desafio.SqlConnector.Connectors
             _SQL_JOIN.Append($"WHERE pes.DateCadastro BETWEEN '{start.ToString("yyyy-MM-dd")}' AND '{end.ToString("yyyy-MM-dd")}'");
             _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
             List<object> _List = new List<object>();
-       
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN;
             PessoaModel model;
-
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
-                    
-                        
-                            while (await reader.ReadAsync())
-                            {
+                    while (await reader.ReadAsync())
+                    {
+                        model = new PessoaModel();
 
-                            model = new PessoaModel();
+                        model.Id = reader.GetInt32(0);
+                        model.NomeCompleto = reader.GetString(1);
+                        model.CPF = reader.GetString(2);
+                        model.DataNascimento = reader.GetDateTime(3);
+                        model.DateCadastro = reader.GetDateTime(4);
 
-                            model.Id = reader.GetInt32(0);
-                            model.NomeCompleto = reader.GetString(1);
-                            model.CPF = reader.GetString(2);
-                            model.DataNascimento = reader.GetDateTime(3);
-                            model.DateCadastro = reader.GetDateTime(4);
-                            model.Endereco = new EnderecoModel();
+                        model.Endereco = new EnderecoModel();
 
-                            model.Endereco.Id = reader.GetInt32(5);
-                            model.Endereco.Logradouro = reader.GetString(6);
-                            model.Endereco.Bairro = reader.GetString(7);
-                            model.Endereco.Cidade = reader.GetString(8);
-                            model.Endereco.UF = reader.GetString(9);
-                            model.Endereco.CEP = reader.GetString(10);
-                            model.Endereco.Complemento = reader.GetString(11);
-                            model.Financeiro = new FinanceiroModel(reader.GetInt32(12),reader.GetDecimal(13));
-                            _List.Add(model);
-
+                        model.Endereco.Id = reader.GetInt32(5);
+                        model.Endereco.Logradouro = reader.GetString(6);
+                        model.Endereco.Bairro = reader.GetString(7);
+                        model.Endereco.Cidade = reader.GetString(8);
+                        model.Endereco.UF = reader.GetString(9);
+                        model.Endereco.CEP = reader.GetString(10);
+                        model.Endereco.Complemento = reader.GetString(11);
+                        model.Financeiro = new FinanceiroModel(reader.GetInt32(12), reader.GetDecimal(13));
+                        _List.Add(model);
                     }
-                    
                 }
             }
             return _List;
@@ -188,7 +169,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         }
 
-        public override async Task<object> ReadRelation(Dictionary<string,string> tables, int? id)
+        public override async Task<object> ReadRelation(Dictionary<string, string> tables, int? id)
         {
 
             StringBuilder _SQL_JOIN = new StringBuilder();
@@ -203,7 +184,7 @@ namespace api_target_desafio.SqlConnector.Connectors
             }
             _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
             List<object> _List = new List<object>();
-            string isWhere = id != null ? "WHERE pes.Id=" +id : "";
+            string isWhere = id != null ? "WHERE pes.Id=" + id : "";
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
             Debug.WriteLine($"SQL:{commandText}");
             await Connection.OpenAsync();
@@ -213,35 +194,34 @@ namespace api_target_desafio.SqlConnector.Connectors
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     switch (id)
-                {
-                    case null:
+                    {
+                        case null:
                             while (await reader.ReadAsync())
                             {
-                                    model = new PessoaModel();
+                                model = new PessoaModel();
+                                model.Id = reader.GetInt32(0);
+                                model.NomeCompleto = reader.GetString(1);
+                                model.CPF = reader.GetString(2);
+                                model.DataNascimento = reader.GetDateTime(3);
 
-                                    model.Id = reader.GetInt32(0);
-                                    model.NomeCompleto = reader.GetString(1);
-                                    model.CPF = reader.GetString(2);
-                                    model.DataNascimento = reader.GetDateTime(3);
+                                model.Endereco = new EnderecoModel();
 
-                                    model.Endereco = new EnderecoModel();
-
-                                    model.Endereco.Id = reader.GetInt32(4);
-                                    model.Endereco.Logradouro = reader.GetString(5);
-                                    model.Endereco.Bairro = reader.GetString(6);    
-                                    model.Endereco.Cidade = reader.GetString(7);
-                                    model.Endereco.UF = reader.GetString(8);
-                                    model.Endereco.CEP = reader.GetString(9);
-                                    model.Endereco.Complemento = reader.GetString(10);
-                                    model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));                                                      
-                                    _List.Add(model);
+                                model.Endereco.Id = reader.GetInt32(4);
+                                model.Endereco.Logradouro = reader.GetString(5);
+                                model.Endereco.Bairro = reader.GetString(6);
+                                model.Endereco.Cidade = reader.GetString(7);
+                                model.Endereco.UF = reader.GetString(8);
+                                model.Endereco.CEP = reader.GetString(9);
+                                model.Endereco.Complemento = reader.GetString(10);
+                                model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+                                _List.Add(model);
                             }
 
                             break;
 
-                    case not null:
-                       
-                           await reader.ReadAsync();
+                        case not null:
+
+                            await reader.ReadAsync();
 
                             model = new PessoaModel();
 
@@ -259,16 +239,10 @@ namespace api_target_desafio.SqlConnector.Connectors
                             model.Endereco.UF = reader.GetString(8);
                             model.Endereco.CEP = reader.GetString(9);
                             model.Endereco.Complemento = reader.GetString(10);
-                            model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12)); 
-                            
+                            model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+
                             return model;
-
-                }
-                
-              
-                    
-
-                 
+                    }
                 }
             }
             return _List;

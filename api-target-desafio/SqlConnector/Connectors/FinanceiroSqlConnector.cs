@@ -1,8 +1,6 @@
 ﻿using api_target_desafio.Models;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +8,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 {
     public class FinanceiroSqlConnector : SqlAbstract
     {
-    
+
         public FinanceiroSqlConnector(string conn)
         {
             Config(conn);
@@ -24,17 +22,17 @@ namespace api_target_desafio.SqlConnector.Connectors
                 SqlCommand command = new SqlCommand(commandText, Connection);
 
                 command.Parameters.Add(new SqlParameter($"@RENDAMENSAL", financeiroInstance.RendaMensal));
-        
+
                 await Connection.OpenAsync();
                 int modified = (int)command.ExecuteScalar();
 
-               await Connection.CloseAsync();
+                await Connection.CloseAsync();
                 return modified;
             }
             return 0;
         }
 
-        public override async Task<bool> Update(object body,int id)
+        public override async Task<bool> Update(object body, int id)
         {
             try
             {
@@ -50,11 +48,12 @@ namespace api_target_desafio.SqlConnector.Connectors
                 await command.ExecuteNonQueryAsync();
                 await Connection.CloseAsync();
                 return true;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return false;
             }
-           
+
         }
 
         public override async Task<bool> Insert(object model)
@@ -73,14 +72,14 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
                 await Connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
-                await  Connection.CloseAsync();
+                await Connection.CloseAsync();
                 return true;
             }
             return false;
         }
 
-      
 
-      
+
+
     }
 }
