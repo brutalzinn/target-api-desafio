@@ -4,7 +4,9 @@ CREATE TABLE PessoaModel (
     CPF varchar(255) NOT NULL,
     DataNascimento date NOT NULL,
 	EnderecoModel_Id int NOT NULL,
-	FinanceiroModel_Id int NOT NULL
+	FinanceiroModel_Id int NOT NULL,
+	DateModificado DATETIME NULL,
+    DateCadastro DATETIME NOT NULL DEFAULT (GETDATE()),
 );
 
  CREATE TABLE FinanceiroModel (
