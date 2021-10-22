@@ -80,7 +80,11 @@ namespace api_target_desafio.Validators
        public static bool Validate(string cpf)
         {
             string CPFOriginal = Salinizator(cpf);
+            int index = CPFOriginal.Length - 2;
+            if (index < 0)
+                return false;
             string CPF = CPFOriginal.Substring(0, CPFOriginal.Length - 2);
+
             if (!ValidFormat(CPF))
             {
                 return false;

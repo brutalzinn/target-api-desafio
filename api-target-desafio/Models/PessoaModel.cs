@@ -28,7 +28,6 @@ namespace api_target_desafio
     
     public string NomeCompleto { get; set; }
     
-        
 
     public string CPF { get; set; }
 
@@ -46,8 +45,27 @@ namespace api_target_desafio
             if (!CpfValidator.Validate(CPF))
             {
                 yield return new ValidationResult(
-                   $"INVALID CPF. PLEASE, REWRITE.");
-                  
+                   $"INVALID CPF. PLEASE, REWRITE."); 
+            }
+            if (Financeiro == null)
+            {
+                yield return new ValidationResult(
+                  $"NO FINANCES DATA DETECTED ON YOUR BODY REQUEST.");
+            }
+            if (Endereco == null)
+            {
+                yield return new ValidationResult(
+                  $"NO GEOLOCALIZATION DATA DETECTED ON YOUR BODY REQUEST.");
+            }
+            if (Endereco == null)
+            {
+                yield return new ValidationResult(
+                  $"NO GEOLOCALIZATION DATA DETECTED ON YOUR BODY REQUEST.");
+            }
+            if(NomeCompleto.Length < 8)
+            {
+                yield return new ValidationResult(
+                  $"PLEASE, PUT YOUR FULL NAME.");
             }
 
         }
