@@ -25,15 +25,14 @@ namespace api_target_desafio.Controllers
         [HttpGet("uf")]
         public IActionResult Uf()
         {
-
             return Ok(Task.Run(() => GetEstados()).Result);
-
         }
 
-        //[HttpGet("cidade/{uf}")]
-        //public IActionResult Cidade(string? uf)
-        //{
+        [HttpGet("cidade/{uf}")]
+        public IActionResult Distrito(string uf)
+        {
+            return Ok(Task.Run(() => GetDistritos(uf)).Result);
 
-        //}
+        }
     }
 }

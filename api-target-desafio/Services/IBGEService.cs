@@ -1,4 +1,5 @@
 ﻿using api_target_desafio.Models;
+using api_target_desafio.Models.IBGE;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -27,15 +28,15 @@ namespace api_target_desafio.Services
             }
         }
 
-        public static async Task<List<IBGEEstadoModel>> GetDistritos()
+        public static async Task<List<IBGEMunicipioModel>> GetDistritos(string estado)
         {
             try
             {
                 HttpClient client = new HttpClient();
 
-                HttpResponseMessage response = await client.GetAsync("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+                HttpResponseMessage response = await client.GetAsync("https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+ estado + "/municipios");
                 var json = await response.Content.ReadAsStringAsync();
-                List<IBGEEstadoModel> result = JsonSerializer.Deserialize<List<IBGEEstadoModel>>(json);
+                List<IBGEMunicipioModel> result = JsonSerializer.Deserialize<List<IBGEMunicipioModel>>(json);
                 return result;
 
             }
