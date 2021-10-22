@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,35 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-        public  async Task<object> ReadCustom(string condition)
+        public async Task<object> Count(string condition)
+        {
+
+            string query = $"SELECT Count(*) as count FROM FinanceiroModel {condition}";
+            try
+            {
+                await Connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand(query, Connection))
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                return 0;
+            }
+            catch(Exception ex)
+            {
+               
+                Debug.WriteLine("Error related.");
+                return 0;
+            }
+
+       }
+            public async Task<object> ReadCustom(string condition)
         {
 
             StringBuilder _SQL_JOIN = new StringBuilder();

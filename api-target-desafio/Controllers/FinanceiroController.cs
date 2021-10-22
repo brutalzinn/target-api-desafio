@@ -29,5 +29,11 @@ namespace api_target_desafio.Controllers
             return Ok(FinanceiroService.CompareMin(FinanceiroConnector, min,max));
         }
 
+        [HttpGet("vips/count")]
+        public IActionResult VipsCount()
+        {
+            return Ok(FinanceiroService.GetVips(FinanceiroConnector));
+        }
+
     }
 }

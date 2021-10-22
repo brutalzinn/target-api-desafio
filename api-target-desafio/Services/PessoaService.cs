@@ -24,7 +24,7 @@ namespace api_target_desafio.Services
                 return response;
             }
 
-            if(pessoa.Financeiro.RendaMensal >= 6000M)
+            if(pessoa.Financeiro.RendaMensal >= 6000)
             {
                 response.OferecerPlanoVip = true;
             }

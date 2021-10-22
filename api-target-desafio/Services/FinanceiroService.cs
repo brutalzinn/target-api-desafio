@@ -11,10 +11,11 @@ namespace api_target_desafio.Services
             string query = max != null ? $"WHERE RendaMensal BETWEEN {min} AND {max}" : $"WHERE RendaMensal >= {min}";
             return Task.Run(() => connector.ReadCustom(query)).Result;
         }
-        public static object GetVips(FinanceiroSqlConnector connector, decimal min, decimal? max)
+        public static object GetVips(FinanceiroSqlConnector connector)
         {
-            string query = max != null ? $"WHERE RendaMensal BETWEEN {min} AND {max}" : $"WHERE RendaMensal >= {min}";
-            return Task.Run(() => connector.ReadCustom(query)).Result;
+            int count = (int)Task.Run(() => connector.Count("WHERE RendaMensal >= 6000")).Result;
+            var result = new { Vips = count };
+            return result;
         }
     }
 }
