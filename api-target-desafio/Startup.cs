@@ -1,4 +1,5 @@
 using api_target_desafio.Middlewares;
+using api_target_desafio.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,10 @@ namespace api_target_desafio
             //    options.SuppressModelStateInvalidFilter = true;
             //});
             services.AddHttpContextAccessor();
-
+            services.AddMvc(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
+            });
             //services.AddDbContext<api_target_desafioContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("api_target_desafioContext")));
 

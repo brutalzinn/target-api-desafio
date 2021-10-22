@@ -56,7 +56,14 @@ namespace api_target_desafio.Controllers
 
         }
 
-   
+        [HttpGet("list/{datestart}/{dateend}")]
+        public IActionResult CompareDate(DateTime datestart, DateTime dateend)
+        {
+
+            return Ok(new { Start = datestart, End = dateend });
+
+        }
+
 
 
     }
