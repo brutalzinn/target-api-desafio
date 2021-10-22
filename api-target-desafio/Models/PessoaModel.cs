@@ -34,7 +34,13 @@ namespace api_target_desafio
 
     public DateTime DataNascimento { get; set; }
 
-    public EnderecoModel Endereco { get; set; }
+    public DateTime DateCadastro { get; set; }
+
+
+    public DateTime DateModificado { get; set; }
+
+
+        public EnderecoModel Endereco { get; set; }
 
     public FinanceiroModel Financeiro { get; set; }
   
