@@ -21,34 +21,25 @@ namespace api_target_desafio.Controllers
 
     [ApiController]
     [Route("user")]
-   
-    //[Produces("application/json")]
+    [Produces("application/json")]
 
     public class PessoaController : ControllerBase
     {
-
         // TODO: WE NEED TO REFACTOR THIS CONTROLLER TO USE SERVICES.
-
-
         public IConfiguration Configuration { get; }
         private PessoaSqlConnector PessoaConnector { get; set; } = new PessoaSqlConnector();
-
         public string connStr = String.Empty;
         public  PessoaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
             connStr = Configuration.GetConnectionString("app_target_api");
             PessoaConnector.Config(connStr);
-
-
         }
- [HttpPost]
+        [HttpPost]
     
         public IActionResult Post(PessoaModel pessoa)
-        {          
-            
+        {                  
            var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
-
             switch (ServiceQuery.Error)
             {
                 case true:
@@ -67,13 +58,7 @@ namespace api_target_desafio.Controllers
         [HttpGet("relation/{id?}")]
         public IActionResult RelationGet(int? id)
         {
-   
             return Ok(PessoaService.GetPessoaRelation(PessoaConnector,id));
         }
-
-
-
-
-
     }
 }
