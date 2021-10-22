@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio.Models
 {
@@ -22,6 +24,13 @@ namespace api_target_desafio.Models
             return "FinanceiroModel";
         }
 
-     
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (RendaMensal == 0)
+            {
+                yield return new ValidationResult(
+                   $"Dude, you put R$ 0 in the RendaMensal field. Fill it with some money.");
+            }
+        }
     }
 }

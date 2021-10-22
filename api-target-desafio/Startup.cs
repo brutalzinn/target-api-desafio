@@ -27,7 +27,10 @@ namespace api_target_desafio
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddMvc(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,10 +41,11 @@ namespace api_target_desafio
             //    options.SuppressModelStateInvalidFilter = true;
             //});
             services.AddHttpContextAccessor();
-            services.AddMvc(options =>
-            {
-                options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
-            });
+            services.AddControllers()
+       .AddJsonOptions(options =>
+       {
+           options.JsonSerializerOptions.Converters.Add(new Config.CustomJsonSerializer());
+       });
             //services.AddDbContext<api_target_desafioContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("api_target_desafioContext")));
 
@@ -84,4 +88,5 @@ namespace api_target_desafio
             return app;
         }
     }
+
 }

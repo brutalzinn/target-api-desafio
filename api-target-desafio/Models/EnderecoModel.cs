@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using api_target_desafio.Services;
+using System.Threading.Tasks;
 
 namespace api_target_desafio.Models
 {
     public class EnderecoModel : BaseModel
     {
-        public EnderecoModel(int id = 0, string logradouro = "", string bairro = "", string cidade = "", string uF = "", string cEP = "", string complemento= "")
+        public EnderecoModel(int id = 0, string logradouro = "", string bairro = "", string cidade = "", string uF = "", string cEP = "", string complemento = "")
         {
-           
+
             Id = id;
             Logradouro = logradouro;
             Bairro = bairro;
@@ -40,7 +43,17 @@ namespace api_target_desafio.Models
         {
             return "EnderecoModel";
         }
+       
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            //fun moment to validate fields
 
-      
-    }
+            if (!Task.Run(()=>VIACepService.CheckCep(this)).Result)
+            {
+                yield return new ValidationResult(
+                   $"INVALID GEOLOCALIZATION DATA. CHECK THE CEP AND OTHER GEOLOCALIZATION FIELDS. PLEASE, REWRITE.");
+            }
+
+        }
+     }
 }

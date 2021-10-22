@@ -40,16 +40,18 @@ namespace api_target_desafio
     public DateTime DateModificado { get; set; }
 
 
-        public EnderecoModel Endereco { get; set; }
+    public EnderecoModel Endereco { get; set; }
 
     public FinanceiroModel Financeiro { get; set; }
   
 
      public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
       {
+            //fun moment to validate fields
 
             if (!CpfValidator.Validate(CPF))
             {
+            
                 yield return new ValidationResult(
                    $"INVALID CPF. PLEASE, REWRITE."); 
             }
@@ -63,16 +65,17 @@ namespace api_target_desafio
                 yield return new ValidationResult(
                   $"NO GEOLOCALIZATION DATA DETECTED ON YOUR BODY REQUEST.");
             }
-            if (Endereco == null)
-            {
-                yield return new ValidationResult(
-                  $"NO GEOLOCALIZATION DATA DETECTED ON YOUR BODY REQUEST.");
-            }
             if(NomeCompleto.Length < 8)
             {
                 yield return new ValidationResult(
                   $"PLEASE, PUT YOUR FULL NAME.");
             }
+            if(DateTime.Today.Year - DataNascimento.Year  > 120)
+            {
+                yield return new ValidationResult(
+                  $"YOU ARE VERY OLD, DUDE! {DateTime.Today.Year - DataNascimento.Year} YEARS?!");
+            }
+         
 
         }
     }
