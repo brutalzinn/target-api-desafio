@@ -23,8 +23,16 @@ namespace api_target_desafio.Controllers
             FinanceiroConnector.Config(connStr);
         }
 
+
+        /// <summary>
+        /// Retorna todos os clientes com base em um valor de RendaMensal mínimo ou ambos ao mesmo tempo.
+        /// </summary>
+        /// <param name="min">Renda mínima</param>
+        /// <param name="max" required="false">Renda Máxima(opcional)</param>
+        /// <returns>Retorna todos os clientes com base nos valores de mínimo
+        /// e máximo de RendaMensal ou apenas com base no valor mínimo de RendaMensal.</returns>
         [HttpGet("renda/{min}/{max?}")]
-        public IActionResult CompareMinimum(decimal min, decimal? max)
+        public IActionResult CompareMinimum(decimal min, decimal? max = null)
         {
             return Ok(FinanceiroService.CompareMin(FinanceiroConnector, min,max));
         }

@@ -5,6 +5,9 @@
     <RootNamespace>api_target_desafio</RootNamespace>
     <UserSecretsId>4654b814-1fa0-4d83-9cf4-52bdad8637e0</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <NoWarn>$(NoWarn);1591</NoWarn>
+
 	  <DockerComposeBaseFilePath>.</DockerComposeBaseFilePath>
   </PropertyGroup>
 

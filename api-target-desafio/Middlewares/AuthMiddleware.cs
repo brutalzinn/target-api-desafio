@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using api_target_desafio.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 //THIS CLASS IS BASED ON https://mithunvp.com/write-custom-asp-net-core-middleware-web-api/
 //THANKS FOR THIS AWESOME ARTICLE :)
@@ -21,11 +21,17 @@ namespace api_target_desafio.Middlewares
         }
         public async Task Invoke(HttpContext context)
         {
+            context.Response.ContentType = "application/json";
+
             if (!context.Request.Headers.Keys.Contains("API-KEY"))
             {
 
-                context.Response.StatusCode = 400; //Bad Request                
-                await context.Response.WriteAsync("BAD REQUEST");
+                context.Response.StatusCode = 400; //Bad Request
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                {
+                    error = "BAD REQUEST. PROVIDE API-KEY HEADER."
+                }));
                 return;
             }
             else
@@ -34,7 +40,12 @@ namespace api_target_desafio.Middlewares
                 if (!AuthSchemaModel.CheckValidApiKey(context.Request.Headers["API-KEY"]))
                 {
                     context.Response.StatusCode = 401; //UnAuthorized
-                    await context.Response.WriteAsync("api key invalid");
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                    {
+                        error = "BAD REQUEST. API KEY INVALID"
+                    }));
+
+
                     return;
                 }
             }

@@ -8,10 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
-
-
-
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace api_target_desafio
 {
@@ -34,7 +33,21 @@ namespace api_target_desafio
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_target_desafio", Version = "v1" });
+                c.OperationFilter<Swagger.SwaggerFilter>();
+
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Target Desafio", Version = "v1",
+                    Description = "Api que desenvolvi para o desafio da target pagamentos. <3",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Roberto Caneiro Paes",
+                        Url = new System.Uri("https://github.com/brutalzinn")
+                    }
+
+                });;
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             //services.Configure<ApiBehaviorOptions>(options =>
             //{
@@ -60,7 +73,7 @@ namespace api_target_desafio
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "api_target_desafio v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Doc - Api Target Desafio v1"));
             }
             //app.Map("/user", UserMiddleware);
 
