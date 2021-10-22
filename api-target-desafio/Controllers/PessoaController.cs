@@ -51,14 +51,11 @@ namespace api_target_desafio.Controllers
 
         [HttpGet("{id?}")]
         public IActionResult Get(int? id)
-        {           
-            return Ok(PessoaService.GetPessoa(PessoaConnector, id));
+        {
+         return Ok(PessoaService.GetPessoaRelation(PessoaConnector, id));
+
         }
 
-        [HttpGet("relation/{id?}")]
-        public IActionResult RelationGet(int? id)
-        {
-            return Ok(PessoaService.GetPessoaRelation(PessoaConnector,id));
-        }
+     
     }
 }
