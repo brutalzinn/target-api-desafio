@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace api_target_desafio.Swagger
 {
-    public class SwaggerFilter : IOperationFilter
+    public class SwaggerAuthentication : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
@@ -19,9 +19,9 @@ namespace api_target_desafio.Swagger
 
                 operation.Parameters.Add(new OpenApiParameter
                 {
-                    Name = "API-KEY",
+                    Name = "api-key",
                     In = ParameterLocation.Header,
-                    Description = "access token",
+                    Description = "API-KEY",
                     Required = true,
                     Schema = new OpenApiSchema
                     {

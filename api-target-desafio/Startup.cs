@@ -33,7 +33,7 @@ namespace api_target_desafio
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.OperationFilter<Swagger.SwaggerFilter>();
+                c.OperationFilter<Swagger.SwaggerAuthentication>();
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Target Desafio", Version = "v1",
                     Description = "Api que desenvolvi para o desafio da target pagamentos. <3",

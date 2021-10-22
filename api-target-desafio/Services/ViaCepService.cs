@@ -40,6 +40,10 @@ namespace api_target_desafio.Services
         public static async Task<bool> CheckCep(EnderecoModel endereco)
         {
             CEPModel ViaCepModel = await GetCep(endereco.CEP);
+            if (ViaCepModel == null || endereco == null)
+            {
+                return false;
+            }
             Debug.WriteLine($"{ViaCepModel.logradouro}-{ViaCepModel.cep}-{ViaCepModel.bairro}-{ViaCepModel.uf}");
             if (ViaCepModel == null)
             {

@@ -19,8 +19,6 @@ namespace api_target_desafio.Controllers
         public PlanController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
-            // connStr = Configuration.GetConnectionString("app_target_api");
-
         }
 
         [HttpGet("detail/vip")]

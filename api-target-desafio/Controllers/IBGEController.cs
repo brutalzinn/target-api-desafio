@@ -21,13 +21,20 @@ namespace api_target_desafio.Controllers
            // connStr = Configuration.GetConnectionString("app_target_api");
           
         }
-
+        /// <summary>
+        /// Retorna todos os estados da API do IBGE.
+        /// </summary>
+        /// <returns>Retorna todos os estados da API do IBGE</returns>
         [HttpGet("uf")]
         public IActionResult Uf()
         {
             return Ok(Task.Run(() => GetEstados()).Result);
         }
-
+        /// <summary>
+        /// Retorna todos os municípios de estado específico.
+        /// </summary>
+        /// <param name="uf">Id do estado</param>
+        /// <returns>Retorna todos os municípios desse estado.</returns>
         [HttpGet("cidade/{uf}")]
         public IActionResult Distrito(string uf)
         {

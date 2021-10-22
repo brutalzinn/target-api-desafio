@@ -29,7 +29,7 @@ namespace api_target_desafio.Models
             if (RendaMensal == 0)
             {
                 yield return new ValidationResult(
-                   $"Dude, you put R$ 0 in the RendaMensal field. Fill it with some money.");
+                   $"Dude, you put R$ 0 in the RendaMensal field. Fill it with some money.This is just a test. We can be like Elon Musk here.");
             }
         }
     }

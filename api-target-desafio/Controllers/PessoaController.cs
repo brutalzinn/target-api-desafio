@@ -36,8 +36,49 @@ namespace api_target_desafio.Controllers
             connStr = Configuration.GetConnectionString("app_target_api");
             PessoaConnector.Config(connStr);
         }
+
+        /// <summary>
+        /// Cadastro de cliente.
+        /// </summary>
+        /// <returns>Retorna um json com o formato:.</returns>
+        /// <response code="200"></response>
+        /// <remarks>
+        /// Exemplo de resposta(200)(usuário com mais ou igual a 6000 reais):
+        ///
+        ///     POST /user
+        ///     {
+        ///        "oferecerPlanoVip": true,
+        ///        "cadastrado": "true",
+        ///        "error": false
+        ///     }
+        ///
+        /// </remarks>
+        /// <remarks>
+        /// Exemplo de resposta(200)(usuário com menos de 6000 reais):
+        ///
+        ///     POST /user
+        ///     {
+        ///        "oferecerPlanoVip": false,
+        ///        "cadastrado": "true",
+        ///        "error": false
+        ///     }
+        ///
+        /// </remarks>
+        /// <remarks>
+        /// Exemplo de resposta(400):
+        ///
+        ///     POST /user
+        ///     {
+        ///        "oferecerPlanoVip": false,
+        ///        "cadastrado": "false",
+        ///        "error": false
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Um novo item criado</returns>
+        /// <response code="201">Retorna o novo item criado</response>
+        /// <response code="400">Se o item não for criado</response>    
         [HttpPost]
-    
         public IActionResult Post(PessoaModel pessoa)
         {                  
            var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
