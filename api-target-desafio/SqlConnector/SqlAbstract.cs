@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector
 {
@@ -14,16 +15,19 @@ namespace api_target_desafio.SqlConnector
             Connection = new SqlConnection(sConnection);
         }
 
-        public abstract object Read(int? id);
+#pragma warning disable IDE0022 // Usar o corpo do bloco para métodos
+#pragma warning disable CS1998
+        public virtual async  Task<object> Read(int? id) => throw new System.NotImplementedException();
+// Usar o corpo do bloco para métodos
 
-        public abstract object ReadRelation(Dictionary<string, string> tables, int? id);
+        public virtual async Task<object> ReadRelation(Dictionary<string, string> tables, int? id) => throw new System.NotImplementedException();
 
-        public abstract bool Insert(object model);
 
-        public virtual int InsertRelation(object model)
-        {
-            throw new System.NotImplementedException();
-        }
+        public virtual async Task<bool> Insert(object model) => throw new System.NotImplementedException();
 
+        public virtual async Task<int> InsertRelation(object model) => throw new System.NotImplementedException();
+
+#pragma warning restore IDE0022
+#pragma warning restore CS1998
     }
 }

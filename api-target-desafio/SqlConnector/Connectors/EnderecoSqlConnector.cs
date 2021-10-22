@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
@@ -12,7 +13,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
 
         }
-        public override int InsertRelation(object model)
+        public override async Task<int> InsertRelation(object model)
         {
 
             if (model is EnderecoModel enderecoInstance)
@@ -26,16 +27,16 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@UF", enderecoInstance.UF));
                 command.Parameters.Add(new SqlParameter($"@CEP", enderecoInstance.CEP));
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
-                Connection.Open();
-                int modified = (int)command.ExecuteScalar();
+                await Connection.OpenAsync();
+                int modified =  (int) await command.ExecuteScalarAsync();
 
-                Connection.Close();
+                 await Connection.CloseAsync();
                 return modified;
             }
             return 0;
         }
 
-        public override bool Insert(object model)
+        public override async Task<bool> Insert(object model)
         {
 
           if(model is EnderecoModel enderecoInstance)
@@ -49,28 +50,28 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@UF", enderecoInstance.UF));
                 command.Parameters.Add(new SqlParameter($"@CEP", enderecoInstance.CEP));
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
-                Connection.Open();
-                command.ExecuteNonQuery();
-                Connection.Close();
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await Connection.CloseAsync();
                 return true;
             }
             return false;
         }
 
 
-        public override object Read(int? id)
+        public override async Task<object> Read(int? id)
         {
             List<EnderecoModel> _List = new List<EnderecoModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
             string commandText = $"SELECT Id, Logradouro, Bairro, Cidade, UF, CEP, Complemento FROM EnderecoModel" + isWhere;
-            Connection.Open();
+            await Connection.OpenAsync();
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 if (id != null)
                 {
                     command.Parameters.Add(new SqlParameter($"@ID", id));
                 }
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     EnderecoModel model = new EnderecoModel();
                    
@@ -95,9 +96,6 @@ namespace api_target_desafio.SqlConnector.Connectors
             return _List;
         }
 
-        public override object ReadRelation(Dictionary<string,string> tables, int? id)
-        {
-            throw new System.NotImplementedException();
-        }
+       
     }
 }

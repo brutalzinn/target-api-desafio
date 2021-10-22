@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
@@ -12,7 +13,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
 
         }
-        public override int InsertRelation(object model)
+        public override async Task<int> InsertRelation(object model)
         {
 
             if (model is FinanceiroModel financeiroInstance)
@@ -22,16 +23,16 @@ namespace api_target_desafio.SqlConnector.Connectors
 
                 command.Parameters.Add(new SqlParameter($"@RENDAMENSAL", financeiroInstance.RendaMensal));
         
-                Connection.Open();
+                await Connection.OpenAsync();
                 int modified = (int)command.ExecuteScalar();
 
-                Connection.Close();
+               await Connection.CloseAsync();
                 return modified;
             }
             return 0;
         }
 
-        public override bool Insert(object model)
+        public override async Task<bool> Insert(object model)
         {
 
             if (model is EnderecoModel enderecoInstance)
@@ -45,9 +46,9 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@UF", enderecoInstance.UF));
                 command.Parameters.Add(new SqlParameter($"@CEP", enderecoInstance.CEP));
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
-                Connection.Open();
-                command.ExecuteNonQuery();
-                Connection.Close();
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await  Connection.CloseAsync();
                 return true;
             }
             return false;
@@ -55,14 +56,6 @@ namespace api_target_desafio.SqlConnector.Connectors
 
       
 
-        public override object Read(int? id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override object ReadRelation(Dictionary<string,string> tables, int? id)
-        {
-            throw new System.NotImplementedException();
-        }
+      
     }
 }

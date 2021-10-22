@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {        
@@ -23,32 +24,32 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             return false;
         }
-        public override object Read(int? id)
+        public override async Task<object> Read(int? id)
         {
             List <PessoaModel> _List = new List <PessoaModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
             string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + isWhere;
-            Connection.Open();
+            await Connection.OpenAsync();
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 if (id != null)
                 {
                     command.Parameters.Add(new SqlParameter($"@ID", id));
                 }
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     PessoaModel model;
 
                     if (id != null)
                     {
-                        reader.Read();
+                     await reader.ReadAsync();
                         model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDateTime(3),
                             new Models.EnderecoModel(), new Models.FinanceiroModel());
 
                         return model;
                     }
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDateTime(3),
@@ -61,7 +62,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         }
 
-        public override bool Insert(object model)
+        public override async Task<bool> Insert(object model)
         {
             try
             {
@@ -75,8 +76,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                         FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
                         enderecoSqlConnector.Config(sConnection);
                         financeiroSqlConnector.Config(sConnection);
-                        enderecoModel = enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
-                        financeiroModel = financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
+                        enderecoModel = await enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
+                        financeiroModel = await financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
                     }
 
                     string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
@@ -87,9 +88,9 @@ namespace api_target_desafio.SqlConnector.Connectors
                     command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
                     command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
                     command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
-                    Connection.Open();
-                    command.ExecuteNonQuery();
-                    Connection.Close();
+                    await Connection.OpenAsync();
+                   await  command.ExecuteNonQueryAsync();
+                  await  Connection.CloseAsync();
                     return true;
                 }
                 return false;
@@ -100,7 +101,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         }
 
 
-        public override object ReadRelation(Dictionary<string,string> tables, int? id)
+        public override async Task<object> ReadRelation(Dictionary<string,string> tables, int? id)
         {
 
             StringBuilder _SQL_JOIN = new StringBuilder();
@@ -118,16 +119,16 @@ namespace api_target_desafio.SqlConnector.Connectors
             string isWhere = id != null ? "WHERE pes.Id=" +id : "";
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
             Debug.WriteLine($"SQL:{commandText}");
-            Connection.Open();
+            await Connection.OpenAsync();
             PessoaModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     switch (id)
                 {
                     case null:
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                     model = new PessoaModel();
 
@@ -153,7 +154,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
                     case not null:
                        
-                            reader.Read();
+                           await reader.ReadAsync();
 
                             model = new PessoaModel();
 
