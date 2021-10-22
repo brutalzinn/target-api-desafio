@@ -62,7 +62,45 @@ namespace api_target_desafio.SqlConnector.Connectors
             return _List;
 
         }
+        //public override async Task<bool> Update(PessoaModel pessoa,int id)
+        //{
+        //    return false;
+        //    //try
+        //    //{
+        //    //    if (model is PessoaModel pessoaInstance)
+        //    //    {
+        //    //        int enderecoModel = 0;
+        //    //        int financeiroModel = 0;
+        //    //        if (pessoaInstance != null && pessoaInstance.Endereco != null && pessoaInstance.Financeiro != null)
+        //    //        {
+        //    //            EnderecoSqlConnector enderecoSqlConnector = new EnderecoSqlConnector();
+        //    //            FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector();
+        //    //            enderecoSqlConnector.Config(sConnection);
+        //    //            financeiroSqlConnector.Config(sConnection);
+        //    //            enderecoModel = await enderecoSqlConnector.Read(pessoaInstance.Endereco.Id);
+        //    //            financeiroModel = await financeiroSqlConnector.Read(pessoaInstance.Financeiro.Id);
+        //    //        }
 
+        //    //        string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
+        //    //        SqlCommand command = new SqlCommand(commandText, Connection);
+
+        //    //        command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
+        //    //        command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
+        //    //        command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));
+        //    //        command.Parameters.Add(new SqlParameter($"@ENDERECOMODEL", enderecoModel));
+        //    //        command.Parameters.Add(new SqlParameter($"@FINANCEIROMODEL", financeiroModel));
+        //    //        await Connection.OpenAsync();
+        //    //        await command.ExecuteNonQueryAsync();
+        //    //        await Connection.CloseAsync();
+        //    //        return true;
+        //    //    }
+        //    //    return false;
+        //    //}
+        //    //catch (Exception e)
+        //    //{
+        //    //    return false;
+        //    //}
+        //}
         public override async Task<bool> Insert(object model)
         {
             try
@@ -105,11 +143,11 @@ namespace api_target_desafio.SqlConnector.Connectors
             await Connection.OpenAsync();
             StringBuilder _SQL_JOIN = new StringBuilder();
             StringBuilder _SQL_NAMES = new StringBuilder();
-            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento, pes.DateCadastro, ");
+            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento, pes.DateCadastro,");
             foreach (var item in tables)
             {
                 string name = item.Key.ToLower().Substring(0, 4);
-                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.Id ");
+                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
                 _SQL_NAMES.Append($"{item.Value},");
             }
             _SQL_JOIN.Append($"WHERE pes.DateCadastro BETWEEN '{start.ToString("yyyy-MM-dd")}' AND '{end.ToString("yyyy-MM-dd")}'");
@@ -144,7 +182,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                             model.Endereco.UF = reader.GetString(9);
                             model.Endereco.CEP = reader.GetString(10);
                             model.Endereco.Complemento = reader.GetString(11);
-                            model.Financeiro = new FinanceiroModel(reader.GetDecimal(12));
+                            model.Financeiro = new FinanceiroModel(reader.GetInt32(12),reader.GetDecimal(13));
                             _List.Add(model);
 
                     }
@@ -161,11 +199,11 @@ namespace api_target_desafio.SqlConnector.Connectors
 
             StringBuilder _SQL_JOIN = new StringBuilder();
             StringBuilder _SQL_NAMES = new StringBuilder();
-            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento, ");
+            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
             foreach (var item in tables)
             {
                 string name = item.Key.ToLower().Substring(0, 4);
-                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.Id ");
+                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
                 _SQL_NAMES.Append($"{item.Value},");
 
             }
@@ -201,7 +239,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                                     model.Endereco.UF = reader.GetString(8);
                                     model.Endereco.CEP = reader.GetString(9);
                                     model.Endereco.Complemento = reader.GetString(10);
-                                    model.Financeiro = new FinanceiroModel(reader.GetDecimal(11));                                                      
+                                    model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));                                                      
                                     _List.Add(model);
                             }
 
@@ -227,7 +265,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                             model.Endereco.UF = reader.GetString(8);
                             model.Endereco.CEP = reader.GetString(9);
                             model.Endereco.Complemento = reader.GetString(10);
-                            model.Financeiro = new FinanceiroModel(reader.GetDecimal(11)); 
+                            model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12)); 
                             
                             return model;
 

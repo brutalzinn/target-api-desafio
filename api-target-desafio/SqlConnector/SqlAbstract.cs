@@ -22,6 +22,9 @@ namespace api_target_desafio.SqlConnector
 
         public virtual async Task<object> ReadRelation(Dictionary<string, string> tables, int? id) => throw new System.NotImplementedException();
 
+        public virtual async Task<bool> Update(object model) => throw new System.NotImplementedException();
+
+
         public virtual async Task<object> RangeDateTime(Dictionary<string, string> tables, DateTime start, DateTime end) => throw new System.NotImplementedException();
         public virtual async Task<bool> Insert(object model) => throw new System.NotImplementedException();
 

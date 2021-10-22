@@ -4,9 +4,10 @@ namespace api_target_desafio.Models
 {
     public class FinanceiroModel : BaseModel
     {
-        public FinanceiroModel(decimal rendaMensal)
+        public FinanceiroModel(int id, decimal rendaMensal)
         {
             RendaMensal = rendaMensal;
+            Id = id;
         }
         public FinanceiroModel()
         {

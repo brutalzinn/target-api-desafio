@@ -56,6 +56,14 @@ namespace api_target_desafio.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public IActionResult Update(PessoaModel pessoa,int id)
+        {
+            return Ok();
+            //return Ok(PessoaService.GetPessoaRelation(PessoaConnector, pessoa, id));
+
+        }
+
         [HttpGet("list/{datestart}/{dateend}")]
         public IActionResult CompareDate(DateTime datestart, DateTime dateend)
         {

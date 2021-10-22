@@ -8,6 +8,11 @@ namespace api_target_desafio.Services
 {
     public static class PessoaService
     {
+      public static  Dictionary<string, string> tables = new Dictionary<string, string>()
+      {
+          {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+          {"FinanceiroModel", "fina.Id,RendaMensal" }
+      };
 
         public static PessoaResponse RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
         {
@@ -32,20 +37,25 @@ namespace api_target_desafio.Services
 
         public static object GetPessoaRelation(PessoaSqlConnector connector,int? id)
         {
-            Dictionary<string, string> tables = new Dictionary<string, string>();
 
-            tables.Add("FinanceiroModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento");
-            tables.Add("EnderecoModel", "RendaMensal");
             return Task.Run(()=>connector.ReadRelation(tables,id)).Result;
         }
 
         public static object CompareDates(PessoaSqlConnector connector, DateTime start,DateTime end)
         {
+
+     
+            return Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
+        }
+
+        public static object Update(PessoaSqlConnector connector, PessoaModel pessoa, int id)
+        {
             Dictionary<string, string> tables = new Dictionary<string, string>();
 
             tables.Add("FinanceiroModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento");
             tables.Add("EnderecoModel", "RendaMensal");
-            return Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
+            return false;
+            // return Task.Run(() => connector.Update()).Result;
         }
     }
 }
