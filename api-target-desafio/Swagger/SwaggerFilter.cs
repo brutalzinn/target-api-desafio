@@ -12,11 +12,8 @@ namespace api_target_desafio.Swagger
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
-            var isAuthorized = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is AuthorizeFilter);
-            var allowAnonymous = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is IAllowAnonymousFilter);
 
-            if (isAuthorized && !allowAnonymous)
-            {
+            
                 if (operation.Parameters == null)
                     operation.Parameters = new List<OpenApiParameter>();
 
@@ -29,10 +26,11 @@ namespace api_target_desafio.Swagger
                     Schema = new OpenApiSchema
                     {
                         Type = "string",
-                        Default = new OpenApiString("API-KEY")
+                        
+                        Default = new OpenApiString("48236d8ec201df516d0f6472d516d72b")
                     }
                 });
-            }
+            
         }
     }
 }
