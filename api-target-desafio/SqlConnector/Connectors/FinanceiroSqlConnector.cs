@@ -1,5 +1,6 @@
 ﻿using api_target_desafio.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,70 @@ namespace api_target_desafio.SqlConnector.Connectors
 {
     public class FinanceiroSqlConnector : SqlAbstract
     {
+              private Dictionary<string, string> tables = new Dictionary<string, string>()
+            {
+                {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+                {"FinanceiroModel", "fina.Id,RendaMensal" }
+            };
+        public FinanceiroSqlConnector()
+        {
 
-        public FinanceiroSqlConnector(string conn)
+        }
+            public FinanceiroSqlConnector(string conn)
         {
             Config(conn);
         }
+        public  async Task<object> ReadCustom(string condition)
+        {
+
+            StringBuilder _SQL_JOIN = new StringBuilder();
+            StringBuilder _SQL_NAMES = new StringBuilder();
+            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
+            foreach (var item in tables)
+            {
+                string name = item.Key.ToLower().Substring(0, 4);
+                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
+                _SQL_NAMES.Append($"{item.Value},");
+
+            }
+            _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
+            List<object> _List = new List<object>();
+            string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + " " + condition;
+            await Connection.OpenAsync();
+            PessoaModel model;
+            using (SqlCommand command = new SqlCommand(commandText, Connection))
+            {
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                  
+                            while (await reader.ReadAsync())
+                            {
+                                model = new PessoaModel();
+                                model.Id = reader.GetInt32(0);
+                                model.NomeCompleto = reader.GetString(1);
+                                model.CPF = reader.GetString(2);
+                                model.DataNascimento = reader.GetDateTime(3);
+
+                                model.Endereco = new EnderecoModel();
+
+                                model.Endereco.Id = reader.GetInt32(4);
+                                model.Endereco.Logradouro = reader.GetString(5);
+                                model.Endereco.Bairro = reader.GetString(6);
+                                model.Endereco.Cidade = reader.GetString(7);
+                                model.Endereco.UF = reader.GetString(8);
+                                model.Endereco.CEP = reader.GetString(9);
+                                model.Endereco.Complemento = reader.GetString(10);
+                                model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+                                _List.Add(model);
+                            }
+
+                           
+                }
+            }
+            return _List;
+
+        }
+
         public override async Task<int> InsertRelation(object model)
         {
 
@@ -58,12 +118,10 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         public override async Task<bool> Insert(object model)
         {
-
             if (model is EnderecoModel enderecoInstance)
             {
                 string commandText = "INSERT INTO EnderecoModel (Logradouro,Bairro,Cidade,UF,CEP,Complemento) VALUES (@LOGRADOURO,@BAIRRO,@CIDADE,@UF,@CEP,@COMPLEMENTO)";
                 SqlCommand command = new SqlCommand(commandText, Connection);
-
                 command.Parameters.Add(new SqlParameter($"@LOGRADOURO", enderecoInstance.Logradouro));
                 command.Parameters.Add(new SqlParameter($"@BAIRRO", enderecoInstance.Bairro));
                 command.Parameters.Add(new SqlParameter($"@CIDADE", enderecoInstance.Cidade));
@@ -78,8 +136,29 @@ namespace api_target_desafio.SqlConnector.Connectors
             return false;
         }
 
+        //public async Task<object> ReadCustom(string query)
+        //{
+        //    List<object> list = new List<object>();
 
+        //    await Connection.OpenAsync();
+        //    using (SqlCommand command = new SqlCommand(query, Connection))
+        //    {
+        //        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+        //        {
+        //            while (await reader.ReadAsync())
+        //            {
 
+        //                for (var i = 0; i < reader.FieldCount; i++)
+        //                {
+        //                    list.Add(reader[i]);
+        //                }
+        //            }
+        //        }
+        //    }
+           
+        //    await Connection.CloseAsync();
 
+        //    return list;
+        //}
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 
 namespace api_target_desafio.Models
 {
@@ -6,7 +7,8 @@ namespace api_target_desafio.Models
     {
         public FinanceiroModel(int id, decimal rendaMensal)
         {
-            RendaMensal = rendaMensal;
+            RendaMensal = decimal.Round(rendaMensal, 2, MidpointRounding.AwayFromZero);
+            
             Id = id;
         }
         public FinanceiroModel()
