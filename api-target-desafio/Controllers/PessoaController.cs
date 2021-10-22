@@ -21,7 +21,8 @@ namespace api_target_desafio.Controllers
 
     [ApiController]
     [Route("user")]
-    [Produces("application/json")]
+   
+    //[Produces("application/json")]
 
     public class PessoaController : ControllerBase
     {
@@ -41,23 +42,13 @@ namespace api_target_desafio.Controllers
 
 
         }
-
-
-
-        [HttpPost]
-     
-
+ [HttpPost]
+    
         public IActionResult Post(PessoaModel pessoa)
-        {
-            List<ModelError> ErrorList = new List<ModelError>();
-            var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
+        {          
             
-            if(!pessoa.Validator(ModelState))
-            {
-                PessoaResponse teste = new PessoaResponse();
-                teste.Text = "TESTE ERROR VALIDATOR";
-                return BadRequest(teste);
-            }          
+           var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
+
             switch (ServiceQuery.Error)
             {
                 case true:

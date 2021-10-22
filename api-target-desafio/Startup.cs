@@ -32,10 +32,10 @@ namespace api_target_desafio
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_target_desafio", Version = "v1" });
             });
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
             services.AddHttpContextAccessor();
 
             //services.AddDbContext<api_target_desafioContext>(options =>

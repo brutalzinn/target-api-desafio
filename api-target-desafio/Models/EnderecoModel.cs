@@ -41,9 +41,6 @@ namespace api_target_desafio.Models
             return "EnderecoModel";
         }
 
-        public override bool Validator(ModelStateDictionary model)
-        {
-            throw new System.NotImplementedException();
-        }
+      
     }
 }

@@ -19,9 +19,6 @@ namespace api_target_desafio.Models
             return "FinanceiroModel";
         }
 
-        public override bool Validator(ModelStateDictionary model)
-        {
-            throw new System.NotImplementedException();
-        }
+     
     }
 }
