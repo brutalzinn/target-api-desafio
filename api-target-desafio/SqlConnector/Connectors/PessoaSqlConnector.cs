@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -99,7 +100,61 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return false;
             }
         }
+        public override async Task<object> RangeDateTime(Dictionary<string, string> tables,DateTime start, DateTime end)
+        {
+            await Connection.OpenAsync();
+            StringBuilder _SQL_JOIN = new StringBuilder();
+            StringBuilder _SQL_NAMES = new StringBuilder();
+            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento, pes.DateCadastro, ");
+            foreach (var item in tables)
+            {
+                string name = item.Key.ToLower().Substring(0, 4);
+                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.Id ");
+                _SQL_NAMES.Append($"{item.Value},");
+            }
+            _SQL_JOIN.Append($"WHERE pes.DateCadastro BETWEEN '{start.ToString("yyyy-MM-dd")}' AND '{end.ToString("yyyy-MM-dd")}'");
+            _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
+            List<object> _List = new List<object>();
+       
+            string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN;
+            PessoaModel model;
 
+            using (SqlCommand command = new SqlCommand(commandText, Connection))
+            {
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    
+                        
+                            while (await reader.ReadAsync())
+                            {
+
+                            model = new PessoaModel();
+
+                            model.Id = reader.GetInt32(0);
+                            model.NomeCompleto = reader.GetString(1);
+                            model.CPF = reader.GetString(2);
+                            model.DataNascimento = reader.GetDateTime(3);
+                            model.DateCadastro = reader.GetDateTime(4);
+                            model.Endereco = new EnderecoModel();
+
+                            model.Endereco.Id = reader.GetInt32(5);
+                            model.Endereco.Logradouro = reader.GetString(6);
+                            model.Endereco.Bairro = reader.GetString(7);
+                            model.Endereco.Cidade = reader.GetString(8);
+                            model.Endereco.UF = reader.GetString(9);
+                            model.Endereco.CEP = reader.GetString(10);
+                            model.Endereco.Complemento = reader.GetString(11);
+                            model.Financeiro = new FinanceiroModel(reader.GetDecimal(12));
+                            _List.Add(model);
+
+                    }
+                    
+                }
+            }
+            return _List;
+
+
+        }
 
         public override async Task<object> ReadRelation(Dictionary<string,string> tables, int? id)
         {
