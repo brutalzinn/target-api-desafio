@@ -9,10 +9,15 @@ namespace api_target_desafio.SqlConnector
     {
         protected string sConnection = String.Empty;
         protected SqlConnection Connection;
-        public virtual void Config(string connStr)
+        public virtual SqlConnection Config(string connStr = "")
         {
+            if (String.IsNullOrEmpty(connStr))
+            {
+                return Connection;
+            }
             sConnection = connStr;
             Connection = new SqlConnection(sConnection);
+            return null;
         }
 
 #pragma warning disable IDE0022 // Usar o corpo do bloco para métodos

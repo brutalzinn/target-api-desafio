@@ -23,84 +23,8 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-        public async Task<object> Count(string condition)
-        {
+      
 
-            string query = $"SELECT Count(*) as count FROM FinanceiroModel {condition}";
-            try
-            {
-                await Connection.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand(query, Connection))
-                {
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            return reader.GetInt32(0);
-                        }
-                    }
-                }
-                return 0;
-            }
-            catch(Exception ex)
-            {
-               
-                Debug.WriteLine("Error related.");
-                return 0;
-            }
-
-       }
-            public async Task<object> ReadCustom(string condition)
-        {
-
-            StringBuilder _SQL_JOIN = new StringBuilder();
-            StringBuilder _SQL_NAMES = new StringBuilder();
-            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
-            foreach (var item in tables)
-            {
-                string name = item.Key.ToLower().Substring(0, 4);
-                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
-                _SQL_NAMES.Append($"{item.Value},");
-
-            }
-            _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
-            List<object> _List = new List<object>();
-            string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + " " + condition;
-            await Connection.OpenAsync();
-            PessoaModel model;
-            using (SqlCommand command = new SqlCommand(commandText, Connection))
-            {
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                {
-                  
-                            while (await reader.ReadAsync())
-                            {
-                                model = new PessoaModel();
-                                model.Id = reader.GetInt32(0);
-                                model.NomeCompleto = reader.GetString(1);
-                                model.CPF = reader.GetString(2);
-                                model.DataNascimento = reader.GetDateTime(3);
-
-                                model.Endereco = new EnderecoModel();
-
-                                model.Endereco.Id = reader.GetInt32(4);
-                                model.Endereco.Logradouro = reader.GetString(5);
-                                model.Endereco.Bairro = reader.GetString(6);
-                                model.Endereco.Cidade = reader.GetString(7);
-                                model.Endereco.UF = reader.GetString(8);
-                                model.Endereco.CEP = reader.GetString(9);
-                                model.Endereco.Complemento = reader.GetString(10);
-                                model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
-                                _List.Add(model);
-                            }
-
-                           
-                }
-            }
-            return _List;
-
-        }
 
         public override async Task<int> InsertRelation(object model)
         {
