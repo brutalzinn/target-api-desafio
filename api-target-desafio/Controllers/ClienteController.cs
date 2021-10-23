@@ -40,10 +40,9 @@ namespace api_target_desafio.Controllers
         /// <summary>
         /// Cadastro de cliente.
         /// </summary>
-        /// <returns>Retorna um json com o formato:.</returns>
         /// <response code="200">Retorna um feedback sobre o cliente cadastrado.</response>
         /// <remarks>
-        /// Exemplo de resposta(200) - cliente renda superior ou igual a 6000 reais:
+        /// Exemplo de resposta(200) - cliente com renda superior ou igual a 6000 reais:
         ///
         ///     POST /user
         ///     {
@@ -68,7 +67,7 @@ namespace api_target_desafio.Controllers
         ///     {
         ///        "oferecerPlanoVip": false,
         ///        "cadastrado": "false",
-        ///        "error": false
+        ///        "error": true
         ///     }
         ///
         /// </remarks>

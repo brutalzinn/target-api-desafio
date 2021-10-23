@@ -11,7 +11,7 @@ CREATE TABLE PessoaModel (
 
  CREATE TABLE FinanceiroModel (
     Id int IDENTITY(1,1) PRIMARY KEY,
-    RendaMensal DECIMAL(9,3) NOT NULL,
+    RendaMensal money NOT NULL,
 );
 
  CREATE TABLE EnderecoModel (

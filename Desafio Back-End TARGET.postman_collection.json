@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "28d096b1-e4ee-4476-9672-34a263d2476d",
+		"name": "Desafio Back-End TARGET",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ibge",
+			"item": [
+				{
+					"name": "ibget get municipio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/geo/cidade/33",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"geo",
+								"cidade",
+								"33"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ibge get estados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/geo/uf",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"geo",
+								"uf"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vip",
+			"item": [
+				{
+					"name": "get vip response",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/plan/detail/vip",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"plan",
+								"detail",
+								"vip"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestor de investimentos",
+			"item": [
+				{
+					"name": "compare dates",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/date/19-10-2021/23-10-2021",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"date",
+								"19-10-2021",
+								"23-10-2021"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "compare renda",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/financeiro/renda/5999/7000",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"financeiro",
+								"renda",
+								"5999",
+								"7000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "count vips",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/financeiro/vips/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"financeiro",
+								"vips",
+								"count"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cad pessoa",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API-KEY",
+						"value": "28236d8ec201df516d0f6472d516d72d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"NomeCompleto\":\"Bernando Oliveira\",\r\n    \"CPF\":\"0000000000\",\r\n    \"DataNascimento\":\"16-02-1932\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"Logradouro\",\r\n    \"bairro\": \"Bairro\",\r\n    \"cidade\": \"Cidade\",\r\n    \"uf\": \"RJ\",\r\n    \"cep\": \"21500-060\",\r\n    \"complemento\": \"Complemento\"\r\n  },\r\n  \"financeiro\": {\r\n    \"rendaMensal\": 5999\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update pessoa",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "API-KEY",
+						"value": "28236d8ec201df516d0f6472d516d72d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"NomeCompleto\":\"rwrwrwr Paes\",\r\n    \"CPF\":\"17168089790\",\r\n    \"DataNascimento\":\"2019-01-06\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"teste\",\r\n    \"bairro\": \"Bairrdfgdgddfgdgo\",\r\n    \"cidade\": \"Cidade\",\r\n    \"uf\": \"SP\",\r\n    \"cep\": \"21520-060\",\r\n    \"complemento\": \"Complemento\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user/4",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get pessoa",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-KEY",
+						"value": "28236d8ec201df516d0f6472d516d72d",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/user/3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get pessoa id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
