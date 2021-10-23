@@ -22,11 +22,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-        private Dictionary<string, string> tables = new Dictionary<string, string>()
-            {
-                {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
-                {"FinanceiroModel", "fina.Id,RendaMensal" }
-            };
+ 
         public override async Task<object> Read(int? id)
         {
             List<ClienteModel> _List = new List<ClienteModel>();
@@ -66,6 +62,12 @@ namespace api_target_desafio.SqlConnector.Connectors
         }
         public override async Task<bool> Update(object body, int id)
         {
+
+            Dictionary<string, string> tables = new Dictionary<string, string>()
+            {
+                {"EnderecoModel", "Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+                {"FinanceiroModel", "RendaMensal" }
+            };
             try
             {
                 ClienteModel pessoa = (ClienteModel)await ReadRelation(tables, id);
@@ -149,21 +151,12 @@ namespace api_target_desafio.SqlConnector.Connectors
             try
             {
                 await Connection.OpenAsync();
-                StringBuilder _SQL_JOIN = new StringBuilder();
-                StringBuilder _SQL_NAMES = new StringBuilder();
-                _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento, pes.DateCadastro,");
-                foreach (var item in tables)
-                {
-                    string name = item.Key.ToLower().Substring(0, 4);
-                    _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
-                    _SQL_NAMES.Append($"{item.Value},");
-                }
-                _SQL_JOIN.Append($"WHERE pes.DateCadastro BETWEEN '{start.ToString("yyyy-MM-dd")}' AND '{end.ToString("yyyy-MM-dd")}'");
-                _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
+                string where = $"WHERE cli.DateCadastro BETWEEN '{start.ToString("yyyy - MM - dd")}' AND '{end.ToString("yyyy - MM - dd")}'";
+                string select = "SELECT cli.id, NomeCompleto, CPF, DataNascimento, DateCadastro";
+                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, select, where);
                 List<object> _List = new List<object>();
-                string commandText = _SQL_NAMES + " FROM ClienteModel AS pes " + _SQL_JOIN;
                 ClienteModel model;
-                using (SqlCommand command = new SqlCommand(commandText, Connection))
+                using (SqlCommand command = new SqlCommand(query, Connection))
                 {
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
@@ -191,7 +184,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                         }
                     }
                 }
-
+                await Connection.CloseAsync();
                 return _List.Count != 0  ? _List : null;
             }
             catch (AggregateException)
@@ -205,24 +198,12 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
-                StringBuilder _SQL_JOIN = new StringBuilder();
-                StringBuilder _SQL_NAMES = new StringBuilder();
-                _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
-                foreach (var item in tables)
-                {
-                    string name = item.Key.ToLower().Substring(0, 4);
-                    _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
-                    _SQL_NAMES.Append($"{item.Value},");
-
-                }
-                _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
                 List<object> _List = new List<object>();
-                string isWhere = id != null ? "WHERE pes.Id=" + id : "";
-                string commandText = _SQL_NAMES + " FROM ClienteModel AS pes " + _SQL_JOIN + isWhere;
-                Debug.WriteLine($"SQL:{commandText}");
+                string isWhere = id != null ? "WHERE cli.Id=" + id : null;
+                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, "SELECT cli.Id, NomeCompleto, CPF, DataNascimento", isWhere);
                 await Connection.OpenAsync();
                 ClienteModel model = null;
-                using (SqlCommand command = new SqlCommand(commandText, Connection))
+                using (SqlCommand command = new SqlCommand(query, Connection))
                 {
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
@@ -253,7 +234,6 @@ namespace api_target_desafio.SqlConnector.Connectors
                                 break;
 
                             case not null:
-
                                 if (await reader.ReadAsync())
                                 {
 

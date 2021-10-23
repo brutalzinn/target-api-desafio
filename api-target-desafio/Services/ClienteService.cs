@@ -11,8 +11,8 @@ namespace api_target_desafio.Services
     {
       public static  Dictionary<string, string> tables = new Dictionary<string, string>()
       {
-          {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
-          {"FinanceiroModel", "fina.Id,RendaMensal" }
+          {"EnderecoModel", "Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+          {"FinanceiroModel", "RendaMensal" }
       };
 
         public static ClienteCadastro RegisterPessoa(ClienteSqlConnector connector, ClienteModel pessoa)
