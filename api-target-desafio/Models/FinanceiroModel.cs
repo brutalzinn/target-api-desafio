@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio.Models
 {
-    public class FinanceiroModel : BaseModel
+    public class FinanceiroModel : ModelBase
     {
         public FinanceiroModel(int id, decimal rendaMensal)
         {

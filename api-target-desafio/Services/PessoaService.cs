@@ -15,10 +15,10 @@ namespace api_target_desafio.Services
           {"FinanceiroModel", "fina.Id,RendaMensal" }
       };
 
-        public static PessoaResponse RegisterPessoa(ClienteSqlConnector connector, ClienteModel pessoa)
+        public static ClienteCadastro RegisterPessoa(ClienteSqlConnector connector, ClienteModel pessoa)
         {
             bool QueryResult =  Task.Run(()=>connector.Insert(pessoa)).Result;
-            PessoaResponse response = new PessoaResponse(false, true);
+            ClienteCadastro response = new ClienteCadastro(false, true);
             if (!QueryResult)
             {
                 response.Cadastrado = false;
@@ -58,7 +58,7 @@ namespace api_target_desafio.Services
             return result;
         }
 
-        public static object Update(ClienteSqlConnector connector, ClienteModel pessoa, int id)
+        public static ClienteUpdate Update(ClienteSqlConnector connector, ClienteModel pessoa, int id)
         {
             bool result = Task.Run(() => connector.Update(pessoa,id)).Result;
             if (!result)
@@ -67,8 +67,9 @@ namespace api_target_desafio.Services
             }
             else
             {
-
+                return new ClienteUpdate(result);
             }
+
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.Models
 {
-    public class EnderecoModel : BaseModel
+    public class EnderecoModel : ModelBase
     {
         public EnderecoModel(int id = 0, string logradouro = "", string bairro = "", string cidade = "", string uF = "", string cEP = "", string complemento = "")
         {

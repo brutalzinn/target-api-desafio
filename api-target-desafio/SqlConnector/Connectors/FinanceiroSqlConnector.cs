@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
-    public class FinanceiroSqlConnector : SqlAbstract
+    public class FinanceiroSqlConnector : SqlBase
     {
               private Dictionary<string, string> tables = new Dictionary<string, string>()
             {

@@ -26,10 +26,18 @@ namespace api_target_desafio.Controllers
         /// </summary>
         /// <returns>Retorna a quantidade de usuários compatíveis com o VIP</returns>
         [HttpGet("detail/vip")]
-        public IActionResult Uf()
+        public IActionResult VipDetail()
         {
             return Ok(PlanService.VipDetail());
         }
-
+        /// <summary>
+        /// Rota utilizada para o cliente confirmar o uso do plano VIP
+        /// </summary>
+        /// <returns>Uma lista de clientes filtrados por data de cadastro.</returns>
+        [HttpPost("manage/vip")]
+        public IActionResult CompareDate(DateTime datestart, DateTime dateend)
+        {
+            return Ok(PessoaService.CompareDates(PessoaConnector, datestart, dateend));
+        }
     }
 }

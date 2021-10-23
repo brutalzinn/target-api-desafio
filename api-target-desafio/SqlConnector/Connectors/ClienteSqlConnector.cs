@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace api_target_desafio.SqlConnector.Connectors
 {
     //WE NEED REFACTOR ALL QUERY BUILDERS TWO DAYS BEFORE DISPATCH THE CHALLENGER
-    public class ClienteSqlConnector : SqlAbstract
+    public class ClienteSqlConnector : SqlBase
     {
 
         public ClienteSqlConnector()

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
-     public class EnderecoSqlConnector : SqlAbstract
+     public class EnderecoSqlConnector : SqlBase
     {
       
         public EnderecoSqlConnector(string conn)

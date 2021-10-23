@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector
 {
-   public abstract class SqlAbstract
+   public abstract class SqlBase
     {
         protected string sConnection = String.Empty;
         protected SqlConnection Connection;

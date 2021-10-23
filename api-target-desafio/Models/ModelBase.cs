@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio.Models
 {
-    public abstract class BaseModel : IValidatableObject
+    public abstract class ModelBase : IValidatableObject
     {
   
         public abstract string GetName();
