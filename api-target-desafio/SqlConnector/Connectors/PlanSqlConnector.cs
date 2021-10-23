@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
-     public class VipSqlConnector : SqlBase
+     public class PlanSqlConnector : SqlBase
     {
-      
-        public VipSqlConnector(string conn)
+        public PlanSqlConnector()
+        {
+        }
+        public PlanSqlConnector(string conn)
         {
             Config(conn);
         }
         public override async Task<int> InsertRelation(object model)
         {
-
             if (model is EnderecoModel enderecoInstance)
             {
                 string commandText = "INSERT INTO EnderecoModel (Logradouro,Bairro,Cidade,UF,CEP,Complemento) output INSERTED.Id VALUES (@LOGRADOURO,@BAIRRO,@CIDADE,@UF,@CEP,@COMPLEMENTO)";
                 SqlCommand command = new SqlCommand(commandText, Connection);
-
                 command.Parameters.Add(new SqlParameter($"@LOGRADOURO", enderecoInstance.Logradouro));
                 command.Parameters.Add(new SqlParameter($"@BAIRRO", enderecoInstance.Bairro));
                 command.Parameters.Add(new SqlParameter($"@CIDADE", enderecoInstance.Cidade));
@@ -32,7 +32,6 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
                 await Connection.OpenAsync();
                 int modified =  (int) await command.ExecuteScalarAsync();
-
                  await Connection.CloseAsync();
                 return modified;
             }
@@ -41,12 +40,10 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         public override async Task<bool> Insert(object model)
         {
-
           if(model is EnderecoModel enderecoInstance)
             {
                 string commandText = "INSERT INTO VipModel (Name, Preco, Descricao) VALUES (@NAME,@PRECO,@DESCRICAO)";
-                SqlCommand command = new SqlCommand(commandText, Connection);
-           
+                SqlCommand command = new SqlCommand(commandText, Connection);         
                 command.Parameters.Add(new SqlParameter($"@NAME", enderecoInstance.Logradouro));
                 command.Parameters.Add(new SqlParameter($"@PRECO", enderecoInstance.Bairro));
                 command.Parameters.Add(new SqlParameter($"@DESCRICAO", enderecoInstance.Cidade));
@@ -69,12 +66,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                     SQL_BUILDER.Append($"Name = '{vipModelInstance.Name}',");
                     SQL_BUILDER.Append($"Preco = '{vipModelInstance.Preco}',");
                     SQL_BUILDER.Append($"Descricao = '{vipModelInstance.Descricao}' ");
-
                 }
-
-                SQL_BUILDER.Append($"WHERE Id = {id}");
-               
-
+                SQL_BUILDER.Append($"WHERE Id = {id}");            
                 SqlCommand command = new SqlCommand(SQL_BUILDER.ToString(), Connection);
                 await Connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
@@ -85,7 +78,6 @@ namespace api_target_desafio.SqlConnector.Connectors
             {
                 return false;
             }
-
         }
         public override async Task<object> Read(int? id)
         {
@@ -101,8 +93,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 }
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
-                    VipModel model = null;
-                   
+                    VipModel model = null;           
                     switch (id)
                     {
                         case null:
@@ -111,27 +102,21 @@ namespace api_target_desafio.SqlConnector.Connectors
                                 model.Id = reader.GetInt32(0);
                                 model.Name = reader.GetString(1);
                                 model.Preco = reader.GetDecimal(2);
-                                model.Descricao = reader.GetString(4);
+                                model.Descricao = reader.GetString(3);
                             }
                             return model;
-
                         case not null:
-
                         while (reader.Read())
                         {
                             model = new VipModel();
                             model.Id = reader.GetInt32(0);
                             model.Name = reader.GetString(1);
                             model.Preco = reader.GetDecimal(2);
-                            model.Descricao = reader.GetString(4);
+                            model.Descricao = reader.GetString(3);
                             _List.Add(model);
                         }
                          break;
-
-
-                    }
-
-                   
+                    }           
                 }
                 
             }

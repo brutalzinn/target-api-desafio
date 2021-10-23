@@ -1,4 +1,5 @@
 ﻿using api_target_desafio.Services;
+using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,11 +15,14 @@ namespace api_target_desafio.Controllers
     public class PlanController : ControllerBase
     {
         public IConfiguration Configuration { get; }
-
+        public string connStr = String.Empty;
+        private PlanSqlConnector PlanConnector { get; set; } = new PlanSqlConnector();
 
         public PlanController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
+            connStr = Configuration.GetConnectionString("app_target_api");
+            PlanConnector.Config(connStr);
         }
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace api_target_desafio.Controllers
         [HttpGet("detail/vip")]
         public IActionResult VipDetail()
         {
-            return Ok(PlanService.VipDetail());
+            return Ok(PlanService.VipDetail(PlanConnector));
         }
         /// <summary>
         /// Rota utilizada para o cliente confirmar o uso do plano VIP
@@ -37,7 +41,7 @@ namespace api_target_desafio.Controllers
         [HttpPost("manage/vip")]
         public IActionResult VipManager()
         {
-            return Ok(PlanService.VipDetail());
+            return Ok(PlanService.VipDetail(PlanConnector));
         }
     }
 }

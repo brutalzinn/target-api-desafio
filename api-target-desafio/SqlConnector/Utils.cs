@@ -64,7 +64,32 @@ namespace api_target_desafio.SqlConnector
             return _List;
 
         }
+        public static async Task<bool> TableExists(SqlConnection Connection,string ModelName)
+        {
+            string query = $"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '@ModelName') SELECT 1 ELSE SELECT 0";
+            try
+            {
+                await Connection.OpenAsync();
 
+                using (SqlCommand command = new SqlCommand(query, Connection))
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return Convert.ToBoolean(reader.GetInt32(0));
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (AggregateException)
+            {
+              
+                return false;
+            }
+
+        }
         public static async Task<object> Count(SqlConnection Connection, string Condition, string ModelName)
         {
             string query = $"SELECT Count(*) as count FROM {ModelName} {Condition}";

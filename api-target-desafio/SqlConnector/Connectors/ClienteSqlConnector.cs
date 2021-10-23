@@ -106,7 +106,6 @@ namespace api_target_desafio.SqlConnector.Connectors
 
                     string commandText = "INSERT INTO ClienteModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
                     SqlCommand command = new SqlCommand(commandText, Connection);
-
                     command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
                     command.Parameters.Add(new SqlParameter($"@CPF", pessoaInstance.CPF));
                     command.Parameters.Add(new SqlParameter($"@DATANASCIMENTO", pessoaInstance.DataNascimento));

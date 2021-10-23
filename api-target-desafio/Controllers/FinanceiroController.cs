@@ -15,6 +15,7 @@ namespace api_target_desafio.Controllers
         public IConfiguration Configuration { get; }
         public string connStr = String.Empty;
 
+
         private FinanceiroSqlConnector FinanceiroConnector { get; set; } = new FinanceiroSqlConnector();
         public FinanceiroController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {

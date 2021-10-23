@@ -1,4 +1,5 @@
 using api_target_desafio.Models;
+using api_target_desafio.Models.Plans;
 using api_target_desafio.Validators;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -39,6 +40,8 @@ namespace api_target_desafio
 
     public DateTime DateModificado { get; set; }
 
+    public VipModel Vip { get; set; }
+
 
     public EnderecoModel Endereco { get; set; }
 
@@ -51,9 +54,8 @@ namespace api_target_desafio
 
             if (!CpfValidator.Validate(CPF))
             {
-            
                 yield return new ValidationResult(
-                   $"INVALID CPF. PLEASE, REWRITE."); 
+                   $"INVALID CPF. PLEASE, REWRITE IT."); 
             }
             if (Financeiro == null)
             {
@@ -75,7 +77,13 @@ namespace api_target_desafio
                 yield return new ValidationResult(
                   $"YOU ARE VERY OLD, DUDE! {DateTime.Today.Year - DataNascimento.Year} YEARS?! Are you a Android?");
             }
-         
+
+            if (DateTime.Today.Year - DataNascimento.Year >= 5)
+            {
+                yield return new ValidationResult(
+                  $"OHHH MY GOD!, ARE YOU A BABY?! {DateTime.Today.Year - DataNascimento.Year} YEARS?! Dude, this system cannot be used by you.");
+            }
+
 
         }
     }
