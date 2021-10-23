@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.Services
 {
-    public static class PessoaService
+    public static class ClienteService
     {
       public static  Dictionary<string, string> tables = new Dictionary<string, string>()
       {

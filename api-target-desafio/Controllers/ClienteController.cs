@@ -76,7 +76,7 @@ namespace api_target_desafio.Controllers
         [HttpPost]
         public IActionResult Post(ClienteModel pessoa)
         {                  
-           var ServiceQuery = PessoaService.RegisterPessoa(PessoaConnector, pessoa);
+           var ServiceQuery = ClienteService.RegisterPessoa(PessoaConnector, pessoa);
             switch (ServiceQuery.Error)
             {
                 case true:
@@ -151,7 +151,7 @@ namespace api_target_desafio.Controllers
         [HttpGet("{id?}")]
         public IActionResult Get(int? id)
         {
-         return Ok(PessoaService.GetPessoaRelation(PessoaConnector, id));
+         return Ok(ClienteService.GetPessoaRelation(PessoaConnector, id));
 
         }
 
@@ -168,7 +168,7 @@ namespace api_target_desafio.Controllers
         public IActionResult Update(ClienteModel pessoa,int id)
         {
           
-            return Ok(PessoaService.Update(PessoaConnector, pessoa, id));
+            return Ok(ClienteService.Update(PessoaConnector, pessoa, id));
 
         }
 
@@ -180,7 +180,7 @@ namespace api_target_desafio.Controllers
         [HttpGet("date/{datestart}/{dateend}")]
         public IActionResult CompareDate(DateTime datestart, DateTime dateend)
         {
-            return Ok(PessoaService.CompareDates(PessoaConnector, datestart, dateend));
+            return Ok(ClienteService.CompareDates(PessoaConnector, datestart, dateend));
         }
 
      

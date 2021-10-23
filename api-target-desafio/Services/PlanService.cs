@@ -1,6 +1,9 @@
-﻿using api_target_desafio.Models.Plans;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Models.Plans;
+using api_target_desafio.Responses;
 using api_target_desafio.SqlConnector;
 using api_target_desafio.SqlConnector.Connectors;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -13,30 +16,44 @@ namespace api_target_desafio.Services
 
         public static VipModel VipDetail(PlanSqlConnector instance)
         {
-            VipModel _vip = null;
             int VipModelExists = (int)Task.Run(() => Utils.Count(instance.Config(), "", "VipModel")).Result;
             Debug.WriteLine($"VIPS:{VipModelExists}");
             if (VipModelExists == 0)
             {
                 for (var i = 1; i < 5; i++)
                 {
-                    _vip = new VipModel($"Vip {i}", 50M);
+                    VipModel _vip = new VipModel($"Vip {i}", 50M);
 
-                    if ((bool)Task.Run(() => instance.Insert(_vip)).Result)
+                    if (Task.Run(() => instance.Insert(_vip)).Result)
                     {
                         Debug.WriteLine("TRUE");
                     }
                 }
             }
-            _vip = Task.Run(() => Utils.SelectAnyVipPlan(instance.Config())).Result;
-            return _vip; //Task.Run(() => Utils.SelectAnyVipPlan(instance.Config())).Result;
+            return Task.Run(() => Utils.SelectAnyVipPlan(instance.Config())).Result;
         }
 
-        public static VipModel VipManager()
+        public static object VipManager(PlanSqlConnector instance, PlanModel cliente)
         {
-          //  VipModel _vip = new VipModel("Vip");
+            //  VipModel _vip = new VipModel("Vip");
 
-            return null;
+            int ClientelExists = (int)Task.Run(() => Utils.Count(instance.Config(), $"WHERE ID = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
+            if(ClientelExists == 0)
+            {
+                throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, $"Client not found. Cant set vip to client with id {cliente.Cliente_Id}.");
+            }
+            bool result = false;
+            if (cliente.Aceito) {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("VipModel_Id", cliente.Vip_Id.ToString());
+
+                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{cliente.Cliente_Id}'");
+
+                result = Task.Run(() => instance.Query(query)).Result;
+            }
+            var _vipResponse = new VipUpdate(result, "Thanks for accept us vip plan.");
+
+            return _vipResponse;
         }
 
     }

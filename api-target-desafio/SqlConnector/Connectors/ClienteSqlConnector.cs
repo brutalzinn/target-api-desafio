@@ -73,6 +73,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 {
                     return false;
                 }
+               
                // FinanceiroSqlConnector Financeiro = new FinanceiroSqlConnector(sConnection);
                 EnderecoSqlConnector Endereco = new EnderecoSqlConnector(sConnection);
 
@@ -80,10 +81,30 @@ namespace api_target_desafio.SqlConnector.Connectors
                 {
                    // await Financeiro.Update(pessoaInstance.Financeiro, pessoa.Financeiro.Id);
                     await Endereco.Update(pessoaInstance.Endereco, pessoa.Endereco.Id);
+
+                    Dictionary<string,string> dic = new Dictionary<string,string>();
+               
+                    dic.Add("NomeCompleto", pessoaInstance.NomeCompleto);
+                    if (pessoaInstance.Vip != null)
+                    {
+                        dic.Add("VipModel_Id", pessoaInstance.Vip.Id.ToString());
+                    }
+                    dic.Add("CPF", pessoaInstance.CPF);
+                    dic.Add("DataNascimento", pessoaInstance.DataNascimento.ToString("yyyy-MM-dd"));
+
+                    string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{pessoa.Id}'");
+
+
+                    SqlCommand command = new SqlCommand(query, Connection);
+                    await Connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                    await Connection.CloseAsync();
+
                 }
                 return true;
+
             }
-            catch (Exception e)
+            catch (AggregateException e)
             {
                 return false;
             }
@@ -255,16 +276,20 @@ namespace api_target_desafio.SqlConnector.Connectors
                                     model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
 
                                 }
+                                await Connection.CloseAsync();
 
                                 return model;
 
                         }
                     }
                 }
+                await Connection.CloseAsync();
                 return _List.Count != 0 ? _List : null;
             }
             catch (AggregateException)
             {
+                await Connection.CloseAsync();
+
                 return null;
             }
 

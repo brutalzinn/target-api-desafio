@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.SqlConnector.Connectors
 {
-     public class PlanSqlConnector : SqlBase
+    public class PlanSqlConnector : SqlBase
     {
         public PlanSqlConnector()
         {
@@ -31,8 +31,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                 command.Parameters.Add(new SqlParameter($"@CEP", enderecoInstance.CEP));
                 command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
                 await Connection.OpenAsync();
-                int modified =  (int) await command.ExecuteScalarAsync();
-                 await Connection.CloseAsync();
+                int modified = (int)await command.ExecuteScalarAsync();
+                await Connection.CloseAsync();
                 return modified;
             }
             return 0;
@@ -62,7 +62,22 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return false;
             }
         }
-
+        public override async Task<bool> Query(string query)
+        {
+            try
+            {
+                SqlCommand command = new SqlCommand(query, Connection);
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await Connection.CloseAsync();
+                return true;
+            }
+            catch (AggregateException)
+            {
+                return false;
+            }
+          
+        }
         public override async Task<bool> Update(object body, int id)
         {
             try

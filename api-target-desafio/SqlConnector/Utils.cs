@@ -16,6 +16,48 @@ namespace api_target_desafio.SqlConnector
                 {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
                 {"FinanceiroModel", "fina.Id,RendaMensal" }
             };
+        public enum QueryBuilderEnum
+        {
+            UPDATE = 0,
+            SELECT = 1,
+            INSERT = 2
+        }
+
+        public static string QueryBuilder(QueryBuilderEnum type, string ModelName, Dictionary<string, string> columns, string condition = null)  
+        {
+            StringBuilder SQL_BUILDER = new StringBuilder();
+            switch (type) {
+                case QueryBuilderEnum.UPDATE:
+                    SQL_BUILDER.Append($"UPDATE {ModelName} SET ");
+                    foreach (var item in columns)
+                    {
+                        SQL_BUILDER.Append($"{item.Key} = '{item.Value}',");
+                    }
+                    SQL_BUILDER.Remove(SQL_BUILDER.Length - 1, 1);
+                    if (condition != null)
+                    {
+                        SQL_BUILDER.Append($" {condition}");
+                    }
+                    break;
+
+                case QueryBuilderEnum.INSERT:
+                    SQL_BUILDER.Append($"INSERT INTO {ModelName} (");
+                    foreach (var item in columns)
+                    {
+                        SQL_BUILDER.Append($"{item.Key},");
+                    }
+                    SQL_BUILDER.Remove(SQL_BUILDER.Length - 1, 1);
+                    SQL_BUILDER.Append(") VALUES (");
+                    foreach (var item in columns)
+                    {
+                        SQL_BUILDER.Append($"{item.Value},");
+                    }
+                    SQL_BUILDER.Append(")");
+                    break;
+            }
+
+            return SQL_BUILDER.ToString();
+        }
         public static async Task<object> ReadCustom(SqlConnection Connection, string Condition, string ModelName)
         {
 

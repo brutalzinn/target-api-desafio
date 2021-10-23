@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Services;
+﻿using api_target_desafio.Models.Plans;
+using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -38,10 +39,10 @@ namespace api_target_desafio.Controllers
         /// Rota utilizada para o cliente confirmar o uso do plano VIP
         /// </summary>
         /// <returns>Uma lista de clientes filtrados por data de cadastro.</returns>
-        //[HttpPost("manage/vip")]
-        //public IActionResult VipManager()
-        //{
-        //    return Ok(PlanService.VipDetail(PlanConnector));
-        //}
+        [HttpPost("manage")]
+        public IActionResult VipManager(PlanModel instance)
+        {
+            return Ok(PlanService.VipManager(PlanConnector, instance));
+        }
     }
 }
