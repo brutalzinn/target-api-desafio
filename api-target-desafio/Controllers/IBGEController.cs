@@ -17,9 +17,7 @@ namespace api_target_desafio.Controllers
 
         public IBGEController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
-            Configuration = configuration;
-           // connStr = Configuration.GetConnectionString("app_target_api");
-          
+            Configuration = configuration;          
         }
         /// <summary>
         /// Retorna todos os estados da API do IBGE.
@@ -31,7 +29,7 @@ namespace api_target_desafio.Controllers
             return Ok(Task.Run(() => GetEstados()).Result);
         }
         /// <summary>
-        /// Retorna todos os municípios de estado específico.
+        /// Retorna todos os municípios de um estado específico da API do IBGE.
         /// </summary>
         /// <param name="uf">Id do estado</param>
         /// <returns>Retorna todos os municípios desse estado.</returns>

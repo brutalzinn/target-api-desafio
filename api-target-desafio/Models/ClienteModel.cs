@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api_target_desafio
 {
-    public class PessoaModel : IValidatableObject
+    public class ClienteModel : IValidatableObject
     {
-    public PessoaModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
+    public ClienteModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
     {
         Id = id;
         NomeCompleto = nomeCompleto;
@@ -18,7 +18,7 @@ namespace api_target_desafio
         Endereco = endereco;
         Financeiro = financeiro;
     }
-    public PessoaModel()
+    public ClienteModel()
     {
 
     }

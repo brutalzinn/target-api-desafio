@@ -31,7 +31,7 @@ namespace api_target_desafio.SqlConnector
             List<object> _List = new List<object>();
             string commandText = $"{_SQL_NAMES} FROM {ModelName} AS pes " + _SQL_JOIN + " " + Condition;
             await Connection.OpenAsync();
-            PessoaModel model;
+            ClienteModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -39,7 +39,7 @@ namespace api_target_desafio.SqlConnector
 
                     while (await reader.ReadAsync())
                     {
-                        model = new PessoaModel();
+                        model = new ClienteModel();
                         model.Id = reader.GetInt32(0);
                         model.NomeCompleto = reader.GetString(1);
                         model.CPF = reader.GetString(2);

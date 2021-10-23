@@ -21,6 +21,10 @@ namespace api_target_desafio.Controllers
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Exibir quantidade de usuários compatíveis com o benefício de VIP.
+        /// </summary>
+        /// <returns>Retorna a quantidade de usuários compatíveis com o VIP</returns>
         [HttpGet("detail/vip")]
         public IActionResult Uf()
         {

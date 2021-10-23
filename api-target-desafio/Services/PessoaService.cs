@@ -14,7 +14,7 @@ namespace api_target_desafio.Services
           {"FinanceiroModel", "fina.Id,RendaMensal" }
       };
 
-        public static PessoaResponse RegisterPessoa(PessoaSqlConnector connector, PessoaModel pessoa)
+        public static PessoaResponse RegisterPessoa(ClienteSqlConnector connector, ClienteModel pessoa)
         {
             bool QueryResult =  Task.Run(()=>connector.Insert(pessoa)).Result;
             PessoaResponse response = new PessoaResponse(false, true);
@@ -30,23 +30,23 @@ namespace api_target_desafio.Services
             }
             return response;
         }
-        public static object GetPessoa(PessoaSqlConnector connector, int? id)
+        public static object GetPessoa(ClienteSqlConnector connector, int? id)
         {
             return Task.Run(() => connector.Read(id)).Result;
         }
 
-        public static object GetPessoaRelation(PessoaSqlConnector connector,int? id)
+        public static object GetPessoaRelation(ClienteSqlConnector connector,int? id)
         {
 
             return Task.Run(()=>connector.ReadRelation(tables,id)).Result;
         }
 
-        public static object CompareDates(PessoaSqlConnector connector, DateTime start,DateTime end)
+        public static object CompareDates(ClienteSqlConnector connector, DateTime start,DateTime end)
         {     
             return Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
         }
 
-        public static object Update(PessoaSqlConnector connector, PessoaModel pessoa, int id)
+        public static object Update(ClienteSqlConnector connector, ClienteModel pessoa, int id)
         {
             return Task.Run(() => connector.Update(pessoa,id)).Result;
         }

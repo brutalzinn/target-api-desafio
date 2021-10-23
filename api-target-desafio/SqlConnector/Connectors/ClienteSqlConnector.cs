@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace api_target_desafio.SqlConnector.Connectors
 {
     //WE NEED REFACTOR ALL QUERY BUILDERS TWO DAYS BEFORE DISPATCH THE CHALLENGER
-    public class PessoaSqlConnector : SqlAbstract
+    public class ClienteSqlConnector : SqlAbstract
     {
 
-        public PessoaSqlConnector()
+        public ClienteSqlConnector()
         {
 
         }
-        public PessoaSqlConnector(string conn)
+        public ClienteSqlConnector(string conn)
         {
             Config(conn);
         }
@@ -27,7 +27,7 @@ namespace api_target_desafio.SqlConnector.Connectors
             };
         public override async Task<object> Read(int? id)
         {
-            List<PessoaModel> _List = new List<PessoaModel>();
+            List<ClienteModel> _List = new List<ClienteModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
             string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + isWhere;
             await Connection.OpenAsync();
@@ -39,12 +39,12 @@ namespace api_target_desafio.SqlConnector.Connectors
                 }
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
-                    PessoaModel model;
+                    ClienteModel model;
 
                     if (id != null)
                     {
                         await reader.ReadAsync();
-                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                        model = new ClienteModel(reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDateTime(3),
                             new Models.EnderecoModel(), new Models.FinanceiroModel());
 
@@ -52,7 +52,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                     }
                     while (await reader.ReadAsync())
                     {
-                        model = new PessoaModel(reader.GetInt32(0), reader.GetString(1),
+                        model = new ClienteModel(reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDateTime(3),
                             new Models.EnderecoModel(), new Models.FinanceiroModel());
                         _List.Add(model);
@@ -66,12 +66,12 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
-                PessoaModel pessoa = (PessoaModel)await ReadRelation(tables, id);
+                ClienteModel pessoa = (ClienteModel)await ReadRelation(tables, id);
                 Debug.WriteLine($"TESTING WITH {pessoa.NomeCompleto}-Financeiro:{pessoa.Financeiro.RendaMensal}");
                 FinanceiroSqlConnector Financeiro = new FinanceiroSqlConnector(sConnection);
                 EnderecoSqlConnector Endereco = new EnderecoSqlConnector(sConnection);
 
-                if (body is PessoaModel pessoaInstance)
+                if (body is ClienteModel pessoaInstance)
                 {
                     await Financeiro.Update(pessoaInstance.Financeiro, pessoa.Financeiro.Id);
                     await Endereco.Update(pessoaInstance.Endereco, pessoa.Endereco.Id);
@@ -87,7 +87,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
-                if (model is PessoaModel pessoaInstance)
+                if (model is ClienteModel pessoaInstance)
                 {
                     int enderecoModel = 0;
                     int financeiroModel = 0;
@@ -135,14 +135,14 @@ namespace api_target_desafio.SqlConnector.Connectors
             _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
             List<object> _List = new List<object>();
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN;
-            PessoaModel model;
+            ClienteModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        model = new PessoaModel();
+                        model = new ClienteModel();
 
                         model.Id = reader.GetInt32(0);
                         model.NomeCompleto = reader.GetString(1);
@@ -188,7 +188,7 @@ namespace api_target_desafio.SqlConnector.Connectors
             string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
             Debug.WriteLine($"SQL:{commandText}");
             await Connection.OpenAsync();
-            PessoaModel model;
+            ClienteModel model;
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -198,7 +198,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                         case null:
                             while (await reader.ReadAsync())
                             {
-                                model = new PessoaModel();
+                                model = new ClienteModel();
                                 model.Id = reader.GetInt32(0);
                                 model.NomeCompleto = reader.GetString(1);
                                 model.CPF = reader.GetString(2);
@@ -223,7 +223,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 
                             await reader.ReadAsync();
 
-                            model = new PessoaModel();
+                            model = new ClienteModel();
 
                             model.Id = reader.GetInt32(0);
                             model.NomeCompleto = reader.GetString(1);
