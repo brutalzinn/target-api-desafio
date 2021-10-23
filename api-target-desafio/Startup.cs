@@ -1,3 +1,4 @@
+using api_target_desafio.Config;
 using api_target_desafio.Middlewares;
 using api_target_desafio.Providers;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,10 @@ namespace api_target_desafio
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+           
+
             services.AddMvc(options =>
             {
                 options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
@@ -78,6 +83,7 @@ namespace api_target_desafio
             //app.Map("/user", UserMiddleware);
 
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.ApplyUserKeyValidation();
 

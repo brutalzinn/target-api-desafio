@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Models;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -171,34 +172,61 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         public override async Task<object> ReadRelation(Dictionary<string, string> tables, int? id)
         {
-
-            StringBuilder _SQL_JOIN = new StringBuilder();
-            StringBuilder _SQL_NAMES = new StringBuilder();
-            _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
-            foreach (var item in tables)
-            {
-                string name = item.Key.ToLower().Substring(0, 4);
-                _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
-                _SQL_NAMES.Append($"{item.Value},");
-
-            }
-            _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
-            List<object> _List = new List<object>();
-            string isWhere = id != null ? "WHERE pes.Id=" + id : "";
-            string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
-            Debug.WriteLine($"SQL:{commandText}");
-            await Connection.OpenAsync();
-            ClienteModel model;
-            using (SqlCommand command = new SqlCommand(commandText, Connection))
-            {
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+           
+                StringBuilder _SQL_JOIN = new StringBuilder();
+                StringBuilder _SQL_NAMES = new StringBuilder();
+                _SQL_NAMES.Append("SELECT pes.id, NomeCompleto, CPF, DataNascimento,");
+                foreach (var item in tables)
                 {
-                    switch (id)
+                    string name = item.Key.ToLower().Substring(0, 4);
+                    _SQL_JOIN.Append($"INNER JOIN {item.Key} AS {name} ON {name}.Id = pes.{item.Key}_Id ");
+                    _SQL_NAMES.Append($"{item.Value},");
+
+                }
+                _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
+                List<object> _List = new List<object>();
+                string isWhere = id != null ? "WHERE pes.Id=" + id : "";
+                string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
+                Debug.WriteLine($"SQL:{commandText}");
+                await Connection.OpenAsync();
+                ClienteModel model = null;
+                using (SqlCommand command = new SqlCommand(commandText, Connection))
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        case null:
-                            while (await reader.ReadAsync())
+                        switch (id)
+                        {
+                            case null:
+                                while (await reader.ReadAsync())
+                                {
+                                    model = new ClienteModel();
+                                    model.Id = reader.GetInt32(0);
+                                    model.NomeCompleto = reader.GetString(1);
+                                    model.CPF = reader.GetString(2);
+                                    model.DataNascimento = reader.GetDateTime(3);
+
+                                    model.Endereco = new EnderecoModel();
+
+                                    model.Endereco.Id = reader.GetInt32(4);
+                                    model.Endereco.Logradouro = reader.GetString(5);
+                                    model.Endereco.Bairro = reader.GetString(6);
+                                    model.Endereco.Cidade = reader.GetString(7);
+                                    model.Endereco.UF = reader.GetString(8);
+                                    model.Endereco.CEP = reader.GetString(9);
+                                    model.Endereco.Complemento = reader.GetString(10);
+                                    model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+                                    _List.Add(model);
+                                }
+
+                                break;
+
+                            case not null:
+
+                            if (await reader.ReadAsync())
                             {
+
                                 model = new ClienteModel();
+
                                 model.Id = reader.GetInt32(0);
                                 model.NomeCompleto = reader.GetString(1);
                                 model.CPF = reader.GetString(2);
@@ -214,39 +242,22 @@ namespace api_target_desafio.SqlConnector.Connectors
                                 model.Endereco.CEP = reader.GetString(9);
                                 model.Endereco.Complemento = reader.GetString(10);
                                 model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
-                                _List.Add(model);
+
                             }
-
-                            break;
-
-                        case not null:
-
-                            await reader.ReadAsync();
-
-                            model = new ClienteModel();
-
-                            model.Id = reader.GetInt32(0);
-                            model.NomeCompleto = reader.GetString(1);
-                            model.CPF = reader.GetString(2);
-                            model.DataNascimento = reader.GetDateTime(3);
-
-                            model.Endereco = new EnderecoModel();
-
-                            model.Endereco.Id = reader.GetInt32(4);
-                            model.Endereco.Logradouro = reader.GetString(5);
-                            model.Endereco.Bairro = reader.GetString(6);
-                            model.Endereco.Cidade = reader.GetString(7);
-                            model.Endereco.UF = reader.GetString(8);
-                            model.Endereco.CEP = reader.GetString(9);
-                            model.Endereco.Complemento = reader.GetString(10);
-                            model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
-
+                            else
+                            {
+                                throw new SqlServiceException($"Client with id {id} doenst exit.");
+                            }
                             return model;
+
                     }
                 }
-            }
-            return _List;
-
+                }
+                return _List;
+            
+                
+               // throw new CustomException($"Client with id {id} doenst exit.");
+            
         }
     }
 }

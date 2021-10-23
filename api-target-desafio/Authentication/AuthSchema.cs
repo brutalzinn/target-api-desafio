@@ -6,12 +6,9 @@ using System.Collections.Generic;
 
 namespace api_target_desafio.Authentication
 {
-    public class AuthSchema : AuthInterface
+    public class AuthSchema 
     {
-        public  void AddKey()
-        {
-            throw new System.NotImplementedException();
-        }
+   
         public AuthSchema()
         {
         }
@@ -34,25 +31,6 @@ namespace api_target_desafio.Authentication
             }
         }
 
-        public void FindKey(string id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void GetAllKeys()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UpdateKey()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void RemoveKey()
-        {
-            throw new System.NotImplementedException();
-        }
 
 
 
