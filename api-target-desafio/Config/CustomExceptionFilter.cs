@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace api_target_desafio.Config
 {
+    //this is a global middleware example to handle erros that i read on article https://jasonwatmore.com/post/2020/10/02/aspnet-core-31-global-error-handler-tutorial
+    // thanks to Jason Watmore for this cool article.
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
@@ -30,19 +32,11 @@ namespace api_target_desafio.Config
 
                 switch (error)
                 {
-
-                    case KeyNotFoundException e:
-                        // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                
-                    case SqlServiceException e:
-                        // not found error
-                        
+                //sqlServiceClassException error
+                    case SqlServiceException e:                    
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
                     default:
-                        // unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }

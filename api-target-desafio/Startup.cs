@@ -85,7 +85,7 @@ namespace api_target_desafio
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
-            app.ApplyUserKeyValidation();
+            app.ApplyApiKeyMiddleware();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -100,7 +100,7 @@ namespace api_target_desafio
     }
     public static class AuthMiddlewareExtension
     {
-        public static IApplicationBuilder ApplyUserKeyValidation(this IApplicationBuilder app)
+        public static IApplicationBuilder ApplyApiKeyMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<AuthMiddleware>();
 

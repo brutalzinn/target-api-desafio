@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Responses;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Responses;
 using api_target_desafio.SqlConnector.Connectors;
 using System;
 using System.Collections.Generic;
@@ -37,18 +38,37 @@ namespace api_target_desafio.Services
 
         public static object GetPessoaRelation(ClienteSqlConnector connector,int? id)
         {
-
-            return Task.Run(()=>connector.ReadRelation(tables,id)).Result;
+                object result = Task.Run(() => connector.ReadRelation(tables, id)).Result;
+                if (result == null)
+                {
+                string error = id != null ? $"Cant find client with id {id}" : $"Cant find any clients.";
+                    throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, error);
+                }
+            return result;
         }
 
         public static object CompareDates(ClienteSqlConnector connector, DateTime start,DateTime end)
-        {     
-            return Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
+        {
+            object result = Task.Run(() => connector.RangeDateTime(tables, start,end)).Result;
+
+            if (result == null)
+            {
+                throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, "Cant find any clients.");
+            }
+            return result;
         }
 
         public static object Update(ClienteSqlConnector connector, ClienteModel pessoa, int id)
         {
-            return Task.Run(() => connector.Update(pessoa,id)).Result;
+            bool result = Task.Run(() => connector.Update(pessoa,id)).Result;
+            if (!result)
+            {
+                throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, $"Client not found. Cant update client with id {id}.");
+            }
+            else
+            {
+
+            }
         }
     }
 }
