@@ -11,5 +11,12 @@ namespace api_target_desafio.Services
             return _vip;
         }
 
+        public static VipModel VipManager()
+        {
+            VipModel _vip = new VipModel("Vip");
+
+            return _vip;
+        }
+
     }
 }

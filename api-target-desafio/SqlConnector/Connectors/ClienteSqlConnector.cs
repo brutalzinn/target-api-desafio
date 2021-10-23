@@ -31,7 +31,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             List<ClienteModel> _List = new List<ClienteModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
-            string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM PessoaModel" + isWhere;
+            string commandText = $"SELECT Id, NomeCompleto, CPF, DataNascimento, EnderecoModel_Id, FinanceiroModel_Id FROM ClienteModel" + isWhere;
             await Connection.OpenAsync();
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {
@@ -104,7 +104,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                         financeiroModel = await financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
                     }
 
-                    string commandText = "INSERT INTO PessoaModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
+                    string commandText = "INSERT INTO ClienteModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
                     SqlCommand command = new SqlCommand(commandText, Connection);
 
                     command.Parameters.Add(new SqlParameter($"@NOMECOMPLETO", pessoaInstance.NomeCompleto));
@@ -141,7 +141,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 _SQL_JOIN.Append($"WHERE pes.DateCadastro BETWEEN '{start.ToString("yyyy-MM-dd")}' AND '{end.ToString("yyyy-MM-dd")}'");
                 _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
                 List<object> _List = new List<object>();
-                string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN;
+                string commandText = _SQL_NAMES + " FROM ClienteModel AS pes " + _SQL_JOIN;
                 ClienteModel model;
                 using (SqlCommand command = new SqlCommand(commandText, Connection))
                 {
@@ -198,7 +198,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
                 List<object> _List = new List<object>();
                 string isWhere = id != null ? "WHERE pes.Id=" + id : "";
-                string commandText = _SQL_NAMES + " FROM PessoaModel AS pes " + _SQL_JOIN + isWhere;
+                string commandText = _SQL_NAMES + " FROM ClienteModel AS pes " + _SQL_JOIN + isWhere;
                 Debug.WriteLine($"SQL:{commandText}");
                 await Connection.OpenAsync();
                 ClienteModel model = null;

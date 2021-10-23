@@ -35,9 +35,9 @@ namespace api_target_desafio.Controllers
         /// </summary>
         /// <returns>Uma lista de clientes filtrados por data de cadastro.</returns>
         [HttpPost("manage/vip")]
-        public IActionResult CompareDate(DateTime datestart, DateTime dateend)
+        public IActionResult VipManager()
         {
-            return Ok(PessoaService.CompareDates(PessoaConnector, datestart, dateend));
+            return Ok(PlanService.VipDetail());
         }
     }
 }

@@ -6,7 +6,8 @@ namespace api_target_desafio.Models.Plans
     public class VipModel
     {
 
-        public string Name { get; set; } = "Plano Vip";
+        public int Id {  get; set; } 
+        public string Name { get; set; }
 
         public decimal Preco { get; set; } = 50M;
 
@@ -16,10 +17,12 @@ namespace api_target_desafio.Models.Plans
 
         }
 
-        public VipModel(string name)
+        public VipModel(string name, decimal preco)
         {
             Name = name;
             Descricao = GetDescricao();
+            Preco = decimal.Round(preco, 2, MidpointRounding.AwayFromZero);
+
         }
         //this is just for funny. Please, dont consider this part :)
         public string RandomEmpresa()
