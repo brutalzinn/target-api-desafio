@@ -1,4 +1,5 @@
 ﻿using api_target_desafio.Models;
+using api_target_desafio.Models.Plans;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -81,36 +82,87 @@ namespace api_target_desafio.SqlConnector
                         }
                     }
                 }
+                await Connection.CloseAsync();
+
                 return false;
             }
             catch (AggregateException)
             {
-              
+                await Connection.CloseAsync();
+
                 return false;
+            }
+
+        }
+
+        public static bool isOpen(SqlConnection Connection)
+        {
+            return (Connection.State == System.Data.ConnectionState.Open);
+        }
+        public static async Task<VipModel> SelectAnyVipPlan(SqlConnection Connection)
+        {
+            try
+            {
+
+            string query = $"SELECT TOP 1 Id, Name, Preco, Descricao FROM VipModel ORDER BY NEWID()";
+           
+                VipModel vipModel = null;
+                using (var con = new SqlConnection(Connection.ConnectionString))
+                {
+                    await con.OpenAsync();
+                    using (SqlCommand command = new SqlCommand(query, con))
+                    {
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                vipModel = new VipModel(reader.GetString(1), reader.GetDecimal(2));
+
+                                vipModel.Id = reader.GetInt32(0);
+                                vipModel.Descricao = reader.GetString(3);
+                            }
+                        }
+                    }
+                }
+
+                return vipModel;
+            }
+            catch (AggregateException)
+            {
+              
+
+                return null;
             }
 
         }
         public static async Task<object> Count(SqlConnection Connection, string Condition, string ModelName)
         {
             string query = $"SELECT Count(*) as count FROM {ModelName} {Condition}";
+        
             try
             {
-                await Connection.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand(query, Connection))
+                using (var con = new SqlConnection(Connection.ConnectionString))
                 {
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    await con.OpenAsync();
+                    using (SqlCommand command = new SqlCommand(query, con))
                     {
-                        if (await reader.ReadAsync())
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
                         {
-                            return reader.GetInt32(0);
+                            if (await reader.ReadAsync())
+                            {
+                                return reader.GetInt32(0);
+                            }
                         }
+
                     }
                 }
                 return 0;
             }
-            catch (Exception ex)
+            catch (AggregateException)
             {
+
                 Debug.WriteLine("Error related.");
                 return 0;
             }

@@ -40,19 +40,27 @@ namespace api_target_desafio.SqlConnector.Connectors
 
         public override async Task<bool> Insert(object model)
         {
-          if(model is EnderecoModel enderecoInstance)
+
+            try
             {
-                string commandText = "INSERT INTO VipModel (Name, Preco, Descricao) VALUES (@NAME,@PRECO,@DESCRICAO)";
-                SqlCommand command = new SqlCommand(commandText, Connection);         
-                command.Parameters.Add(new SqlParameter($"@NAME", enderecoInstance.Logradouro));
-                command.Parameters.Add(new SqlParameter($"@PRECO", enderecoInstance.Bairro));
-                command.Parameters.Add(new SqlParameter($"@DESCRICAO", enderecoInstance.Cidade));
-                await Connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
-                await Connection.CloseAsync();
-                return true;
+                if (model is VipModel vipInstance)
+                {
+                    string commandText = "INSERT INTO VipModel (Name, Preco, Descricao) VALUES (@NAME,@PRECO,@DESCRICAO)";
+                    SqlCommand command = new SqlCommand(commandText, Connection);
+                    command.Parameters.Add(new SqlParameter($"@NAME", vipInstance.Name));
+                    command.Parameters.Add(new SqlParameter($"@PRECO", vipInstance.Preco));
+                    command.Parameters.Add(new SqlParameter($"@DESCRICAO", vipInstance.Descricao));
+                    await Connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                    await Connection.CloseAsync();
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (AggregateException)
+            {
+                return false;
+            }
         }
 
         public override async Task<bool> Update(object body, int id)
@@ -104,6 +112,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                                 model.Preco = reader.GetDecimal(2);
                                 model.Descricao = reader.GetString(3);
                             }
+                            await Connection.CloseAsync();
                             return model;
                         case not null:
                         while (reader.Read())
@@ -115,7 +124,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                             model.Descricao = reader.GetString(3);
                             _List.Add(model);
                         }
-                         break;
+                            await Connection.CloseAsync();
+                            break;
                     }           
                 }
                 

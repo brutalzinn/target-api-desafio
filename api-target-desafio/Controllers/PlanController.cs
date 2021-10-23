@@ -38,10 +38,10 @@ namespace api_target_desafio.Controllers
         /// Rota utilizada para o cliente confirmar o uso do plano VIP
         /// </summary>
         /// <returns>Uma lista de clientes filtrados por data de cadastro.</returns>
-        [HttpPost("manage/vip")]
-        public IActionResult VipManager()
-        {
-            return Ok(PlanService.VipDetail(PlanConnector));
-        }
+        //[HttpPost("manage/vip")]
+        //public IActionResult VipManager()
+        //{
+        //    return Ok(PlanService.VipDetail(PlanConnector));
+        //}
     }
 }

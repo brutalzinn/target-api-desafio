@@ -78,7 +78,7 @@ namespace api_target_desafio
                   $"YOU ARE VERY OLD, DUDE! {DateTime.Today.Year - DataNascimento.Year} YEARS?! Are you a Android?");
             }
 
-            if (DateTime.Today.Year - DataNascimento.Year >= 5)
+            if (DateTime.Today.Year - DataNascimento.Year <= 5)
             {
                 yield return new ValidationResult(
                   $"OHHH MY GOD!, ARE YOU A BABY?! {DateTime.Today.Year - DataNascimento.Year} YEARS?! Dude, this system cannot be used by you.");
