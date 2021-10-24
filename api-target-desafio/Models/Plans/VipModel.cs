@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace api_target_desafio.Models.Plans
 {
@@ -12,8 +13,12 @@ namespace api_target_desafio.Models.Plans
         public decimal Preco { get; set; } = 50M;
 
         public string Descricao { get; set; }
-        public VipModel()
+        public VipModel(SqlDataReader reader)
         {
+            Id = (int)reader["Id"];
+            Name = reader["Name"].ToString();
+            Preco = decimal.Round((decimal)reader["Preco"], 2, MidpointRounding.AwayFromZero);  
+            Descricao = reader["Descricao"].ToString();
 
         }
 

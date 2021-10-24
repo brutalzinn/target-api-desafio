@@ -23,9 +23,9 @@ namespace api_target_desafio.SqlConnector
 #pragma warning disable IDE0022 // Usar o corpo do bloco para métodos
 #pragma warning disable CS1998
         public virtual async  Task<object> Read(int? id) => throw new System.NotImplementedException();
-// Usar o corpo do bloco para métodos
+        // Usar o corpo do bloco para métodos
+        public virtual async Task<object> Read(Dictionary<string, string> tables, int? id) => throw new System.NotImplementedException();
 
-        public virtual async Task<object> ReadRelation(Dictionary<string, string> tables, int? id) => throw new System.NotImplementedException();
 
         public virtual async Task<bool> Update(object model,int id) => throw new System.NotImplementedException();
 

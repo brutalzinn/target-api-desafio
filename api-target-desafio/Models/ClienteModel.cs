@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace api_target_desafio
 {
-    public class ClienteModel : IValidatableObject
+    public class ClienteModel : ModelBase
     {
     public ClienteModel(int id, string nomeCompleto, string cPF, DateTime dataNascimento, EnderecoModel endereco, FinanceiroModel financeiro)
     {
@@ -26,9 +26,13 @@ namespace api_target_desafio
     }
     public ClienteModel(SqlDataReader reader)
     {
-
-    }
-        [Key]
+            Id = (int) reader[$"{GetNameId()}.Id"];
+            NomeCompleto = reader[$"{GetNameId()}.NomeCompleto"].ToString();
+            CPF = reader[$"{GetNameId()}.CPF"].ToString();
+            DataNascimento = Convert.ToDateTime(reader[$"{GetNameId()}.DataNascimento"]);
+            DateCadastro = Convert.ToDateTime(reader[$"{GetNameId()}.DateCadastro"]);
+     }
+    [Key]
     public int Id { get; set; }
     
     public string NomeCompleto { get; set; }
@@ -52,7 +56,7 @@ namespace api_target_desafio
     public FinanceiroModel Financeiro { get; set; }
   
 
-     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+     public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
       {
             //fun moment to validate fields
 
@@ -89,6 +93,11 @@ namespace api_target_desafio
             }
 
 
+        }
+
+        public override string GetName()
+        {
+            return "ClienteModel";
         }
     }
 }

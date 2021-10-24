@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 
 namespace api_target_desafio.Models
 {
@@ -13,9 +14,10 @@ namespace api_target_desafio.Models
             
             Id = id;
         }
-        public FinanceiroModel()
+        public FinanceiroModel(SqlDataReader reader)
         {
-           
+            Id = (int)reader[$"{GetNameId()}.Id"];
+            RendaMensal = decimal.Round((decimal)reader[$"{GetNameId()}.RendaMensal"], 2, MidpointRounding.AwayFromZero); 
         }
         public int Id { get; set; }
         public decimal RendaMensal { get; set; }

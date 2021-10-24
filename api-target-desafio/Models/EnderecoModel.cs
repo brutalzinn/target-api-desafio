@@ -5,6 +5,7 @@ using api_target_desafio.Services;
 using System.Threading.Tasks;
 using api_target_desafio.Validators;
 using api_target_desafio.Models.Errors;
+using System.Data.SqlClient;
 
 namespace api_target_desafio.Models
 {
@@ -21,9 +22,15 @@ namespace api_target_desafio.Models
             CEP = cEP;
             Complemento = complemento;
         }
-        public EnderecoModel()
+        public EnderecoModel(SqlDataReader reader)
         {
-
+            Id = (int)reader[$"{GetNameId()}.Id"];
+            Logradouro = reader[$"{GetNameId()}.Logradouro"].ToString();
+            Bairro = reader[$"{GetNameId()}.Bairro"].ToString();
+            Cidade = reader[$"{GetNameId()}.Cidade"].ToString();
+            UF = reader[$"{GetNameId()}.UF"].ToString();
+            CEP = reader[$"{GetNameId()}.CEP"].ToString();
+            Complemento = reader[$"{GetNameId()}.Complemento"].ToString();
         }
 
         [Key]
@@ -51,13 +58,7 @@ namespace api_target_desafio.Models
             //fun moment to validate fields
             CepModelError cepModelError = Task.Run(() => CepValidator.CheckCep(this)).Result;
             string result = "";
-
-            if (cepModelError == null)
-            {
-                result = "Cant find this CEP field";
-                yield return new ValidationResult(result);
-            }
-            if (!cepModelError.Validade())
+            if (cepModelError != null && !cepModelError.Validade())
             {
                 if (!cepModelError.Cidade)
                 {
@@ -75,9 +76,13 @@ namespace api_target_desafio.Models
                 {
                     result = "Error on Bairro field";
                 }
-                yield return new ValidationResult(result);
             }
+            else
+            {
+                result = "Invalid CEP. Check the cep field.";
+            }
+            yield return new ValidationResult(result);
 
         }
-     }
+    }
 }

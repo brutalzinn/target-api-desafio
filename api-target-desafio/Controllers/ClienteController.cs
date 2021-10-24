@@ -160,7 +160,7 @@ namespace api_target_desafio.Controllers
             {
                 throw new ModelValidatorException(ModelState);
             }
-            return Ok(ClienteService.GetPessoaRelation(PessoaConnector, id));
+            return Ok(ClienteService.GetPessoa(PessoaConnector, id));
 
         }
 

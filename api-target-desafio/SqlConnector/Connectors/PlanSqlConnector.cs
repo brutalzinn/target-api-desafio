@@ -18,25 +18,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-        public override async Task<int> InsertRelation(object model)
-        {
-            if (model is EnderecoModel enderecoInstance)
-            {
-                string commandText = "INSERT INTO EnderecoModel (Logradouro,Bairro,Cidade,UF,CEP,Complemento) output INSERTED.Id VALUES (@LOGRADOURO,@BAIRRO,@CIDADE,@UF,@CEP,@COMPLEMENTO)";
-                SqlCommand command = new SqlCommand(commandText, Connection);
-                command.Parameters.Add(new SqlParameter($"@LOGRADOURO", enderecoInstance.Logradouro));
-                command.Parameters.Add(new SqlParameter($"@BAIRRO", enderecoInstance.Bairro));
-                command.Parameters.Add(new SqlParameter($"@CIDADE", enderecoInstance.Cidade));
-                command.Parameters.Add(new SqlParameter($"@UF", enderecoInstance.UF));
-                command.Parameters.Add(new SqlParameter($"@CEP", enderecoInstance.CEP));
-                command.Parameters.Add(new SqlParameter($"@COMPLEMENTO", enderecoInstance.Complemento));
-                await Connection.OpenAsync();
-                int modified = (int)await command.ExecuteScalarAsync();
-                await Connection.CloseAsync();
-                return modified;
-            }
-            return 0;
-        }
+      
 
         public override async Task<bool> Insert(object model)
         {
@@ -77,6 +59,23 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return false;
             }
           
+        }
+
+        public async Task<bool> ClienteProporcionalPlans(string plan,string query)
+        {
+            try
+            {
+                SqlCommand command = new SqlCommand(query, Connection);
+                await Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                await Connection.CloseAsync();
+                return true;
+            }
+            catch (AggregateException)
+            {
+                return false;
+            }
+
         }
         public override async Task<bool> Update(object body, int id)
         {
@@ -121,22 +120,14 @@ namespace api_target_desafio.SqlConnector.Connectors
                     {
                         case null:
                             if (reader.Read()) {
-                                model = new VipModel();
-                                model.Id = reader.GetInt32(0);
-                                model.Name = reader.GetString(1);
-                                model.Preco = reader.GetDecimal(2);
-                                model.Descricao = reader.GetString(3);
+                                model = new VipModel(reader);            
                             }
                             await Connection.CloseAsync();
                             return model;
                         case not null:
                         while (reader.Read())
                         {
-                            model = new VipModel();
-                            model.Id = reader.GetInt32(0);
-                            model.Name = reader.GetString(1);
-                            model.Preco = reader.GetDecimal(2);
-                            model.Descricao = reader.GetString(3);
+                            model = new VipModel(reader);
                             _List.Add(model);
                         }
                             await Connection.CloseAsync();

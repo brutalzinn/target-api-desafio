@@ -17,7 +17,6 @@ namespace api_target_desafio.Services
         public static VipModel VipDetail(PlanSqlConnector instance)
         {
             int VipModelExists = (int)Task.Run(() => Utils.Count(instance.Config(), "", "VipModel")).Result;
-            Debug.WriteLine($"VIPS:{VipModelExists}");
             if (VipModelExists == 0)
             {
                 for (var i = 1; i < 5; i++)
@@ -30,7 +29,11 @@ namespace api_target_desafio.Services
                     }
                 }
             }
-            return Task.Run(() => Utils.SelectAnyVipPlan(instance.Config())).Result;
+
+            // VipInfo vipInfo = new VipInfo();
+
+            // return Task.Run(() => instance.Insert(_vip)).Result)
+            return null;
         }
 
         public static object VipManager(PlanSqlConnector instance, PlanModel cliente)

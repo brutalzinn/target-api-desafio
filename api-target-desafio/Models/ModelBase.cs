@@ -6,9 +6,15 @@ namespace api_target_desafio.Models
 {
     public abstract class ModelBase : IValidatableObject
     {
-  
+
         public abstract string GetName();
 
+
+        public virtual string GetNameId()
+        {
+            return GetName().ToLower().Substring(0, 3);
+        }
+ 
         public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);
        
     }

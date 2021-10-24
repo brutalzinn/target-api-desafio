@@ -31,14 +31,11 @@ namespace api_target_desafio.Services
             }
             return response;
         }
-        public static object GetPessoa(ClienteSqlConnector connector, int? id)
-        {
-            return Task.Run(() => connector.Read(id)).Result;
-        }
+      
 
-        public static object GetPessoaRelation(ClienteSqlConnector connector,int? id)
+        public static object GetPessoa(ClienteSqlConnector connector,int? id)
         {
-                object result = Task.Run(() => connector.ReadRelation(tables, id)).Result;
+                object result = Task.Run(() => connector.Read(tables, id)).Result;
                 if (result == null)
                 {
                 string error = id != null ? $"Cant find client with id {id}" : $"Cant find any clients.";
