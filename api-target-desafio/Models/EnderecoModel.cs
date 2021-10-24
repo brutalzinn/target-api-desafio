@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using api_target_desafio.Services;
 using System.Threading.Tasks;
+using api_target_desafio.Validators;
+using api_target_desafio.Models.Errors;
 
 namespace api_target_desafio.Models
 {
@@ -47,11 +49,27 @@ namespace api_target_desafio.Models
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             //fun moment to validate fields
-
-            if (!Task.Run(()=>VIACepService.CheckCep(this)).Result)
+            CepModelError cepModelError = Task.Run(() => CepValidator.CheckCep(this)).Result;
+            if (!cepModelError.Validade())
             {
-                yield return new ValidationResult(
-                   $"INVALID GEOLOCALIZATION DATA. CHECK THE CEP AND OTHER GEOLOCALIZATION FIELDS. PLEASE, REWRITE.");
+                string result = "";
+                if (!cepModelError.Cidade)
+                {
+                    result = "Error on cidade field";
+                }
+                if (!cepModelError.Logradouro)
+                {
+                    result = "Error on Logradouro field";
+                }
+                if (!cepModelError.Uf)
+                {
+                    result = "Error on UF field";
+                }
+                if (!cepModelError.Bairro)
+                {
+                    result = "Error on Bairro field";
+                }
+                yield return new ValidationResult(result);
             }
 
         }

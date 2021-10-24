@@ -16,10 +16,10 @@ namespace api_target_desafio.SqlConnector
                 {"EnderecoModel", "Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
                 {"FinanceiroModel", "RendaMensal" }
             };
-      
-       
 
-       
+   
+
+
         public static async Task<object> ReadCustom(SqlConnection Connection, string Condition, string ModelName)
         {
 
@@ -99,16 +99,12 @@ namespace api_target_desafio.SqlConnector
 
         }
 
-        public static bool isOpen(SqlConnection Connection)
-        {
-            return (Connection.State == System.Data.ConnectionState.Open);
-        }
         public static async Task<VipModel> SelectAnyVipPlan(SqlConnection Connection)
         {
             try
             {
 
-            string query = $"SELECT TOP 1 Id, Name, Preco, Descricao FROM VipModel ORDER BY NEWID()";
+            string query = $"SELECT TOP 1 Id, Nome, Preco, Descricao FROM VipModel ORDER BY NEWID()";
            
                 VipModel vipModel = null;
                 using (var con = new SqlConnection(Connection.ConnectionString))

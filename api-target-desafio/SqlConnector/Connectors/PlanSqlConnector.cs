@@ -45,9 +45,9 @@ namespace api_target_desafio.SqlConnector.Connectors
             {
                 if (model is VipModel vipInstance)
                 {
-                    string commandText = "INSERT INTO VipModel (Name, Preco, Descricao) VALUES (@NAME,@PRECO,@DESCRICAO)";
+                    string commandText = "INSERT INTO VipModel (Nome, Preco, Descricao) VALUES (@NOME,@PRECO,@DESCRICAO)";
                     SqlCommand command = new SqlCommand(commandText, Connection);
-                    command.Parameters.Add(new SqlParameter($"@NAME", vipInstance.Name));
+                    command.Parameters.Add(new SqlParameter($"@NOME", vipInstance.Name));
                     command.Parameters.Add(new SqlParameter($"@PRECO", vipInstance.Preco));
                     command.Parameters.Add(new SqlParameter($"@DESCRICAO", vipInstance.Descricao));
                     await Connection.OpenAsync();
