@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Responses;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Responses;
 using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
 using api_target_desafio.Validators;
@@ -77,6 +78,10 @@ namespace api_target_desafio.Controllers
         public IActionResult Post(ClienteModel pessoa)
         {                  
            var ServiceQuery = ClienteService.RegisterPessoa(PessoaConnector, pessoa);
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             switch (ServiceQuery.Error)
             {
                 case true:

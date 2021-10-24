@@ -213,7 +213,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                             case null:
                                 while (await reader.ReadAsync())
                                 {
-                                    model = new ClienteModel();
+                                    model = new ClienteModel(reader);
+
                                     model.Id = reader.GetInt32(0);
                                     model.NomeCompleto = reader.GetString(1);
                                     model.CPF = reader.GetString(2);

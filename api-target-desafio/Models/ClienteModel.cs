@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 
 namespace api_target_desafio
 {
@@ -23,8 +24,11 @@ namespace api_target_desafio
     {
 
     }
+    public ClienteModel(SqlDataReader reader)
+    {
 
-    [Key]
+    }
+        [Key]
     public int Id { get; set; }
     
     public string NomeCompleto { get; set; }

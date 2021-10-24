@@ -48,7 +48,7 @@ namespace api_target_desafio.Middlewares
 					context.Response.StatusCode = 401; //UnAuthorized
 					await context.Response.WriteAsync(JsonConvert.SerializeObject(new
 					{
-						error = "BAD REQUEST. API KEY INVALID"
+						error = "BAD REQUEST. API-KEY INVALID"
 					}));
 
 

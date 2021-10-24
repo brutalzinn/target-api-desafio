@@ -36,6 +36,10 @@ namespace api_target_desafio.Config
                     case SqlServiceException e:                    
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
+                    case ModelValidatorException e:
+                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                        
+                        break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
