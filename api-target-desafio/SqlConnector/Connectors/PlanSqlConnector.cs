@@ -124,22 +124,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         }
    
 
-        public async Task<bool> ClienteProporcionalPlans(string plan,string query)
-        {
-            try
-            {
-                SqlCommand command = new SqlCommand(query, Connection);
-                await Connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
-                await Connection.CloseAsync();
-                return true;
-            }
-            catch (AggregateException)
-            {
-                return false;
-            }
-
-        }
+   
         public override async Task<bool> Update(object body, int id)
         {
             try
