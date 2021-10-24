@@ -156,7 +156,11 @@ namespace api_target_desafio.Controllers
         [HttpGet("{id?}")]
         public IActionResult Get(int? id)
         {
-         return Ok(ClienteService.GetPessoaRelation(PessoaConnector, id));
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
+            return Ok(ClienteService.GetPessoaRelation(PessoaConnector, id));
 
         }
 
@@ -172,7 +176,10 @@ namespace api_target_desafio.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(ClienteModel pessoa,int id)
         {
-          
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(ClienteService.Update(PessoaConnector, pessoa, id));
 
         }
@@ -185,6 +192,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("date/{datestart}/{dateend}")]
         public IActionResult CompareDate(DateTime datestart, DateTime dateend)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(ClienteService.CompareDates(PessoaConnector, datestart, dateend));
         }
 

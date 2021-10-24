@@ -26,7 +26,7 @@ namespace api_target_desafio.Middlewares
 			//This is a small solution before the final solution
 			//I think this can be better after read the particular details about swagger implementation
 			//robertocpaes 22/10/2021 #needrefactor
-		  
+		 
 			string key = context.Request.Headers.Keys.Contains("API-KEY") ? "API-KEY" : "api-key"; 
 
 			if (!context.Request.Headers.Keys.Contains(key))

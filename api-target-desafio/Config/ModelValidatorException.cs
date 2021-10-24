@@ -16,6 +16,7 @@ namespace api_target_desafio.Config
 
             public ModelValidatorException(ModelStateDictionary model)
             {
+            Errors = new List<string>();
             foreach (var item in model.Values)
             {
                 foreach (var error in item.Errors) {

@@ -50,9 +50,15 @@ namespace api_target_desafio.Models
         {
             //fun moment to validate fields
             CepModelError cepModelError = Task.Run(() => CepValidator.CheckCep(this)).Result;
+            string result = "";
+
+            if (cepModelError == null)
+            {
+                result = "Cant find this CEP field";
+                yield return new ValidationResult(result);
+            }
             if (!cepModelError.Validade())
             {
-                string result = "";
                 if (!cepModelError.Cidade)
                 {
                     result = "Error on cidade field";

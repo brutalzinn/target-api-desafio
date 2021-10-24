@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Services;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("renda/{min}/{max?}")]
         public IActionResult CompareMinimum(decimal min, decimal? max)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(FinanceiroService.CompareMin(FinanceiroConnector, min,max));
         }
 
@@ -46,6 +51,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("vips/count")]
         public IActionResult VipsCount()
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(FinanceiroService.GetVips(FinanceiroConnector));
         }
 

@@ -1,4 +1,5 @@
-﻿using api_target_desafio.Models.Plans;
+﻿using api_target_desafio.Config;
+using api_target_desafio.Models.Plans;
 using api_target_desafio.Services;
 using api_target_desafio.SqlConnector.Connectors;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace api_target_desafio.Controllers
 {
 
     [ApiController]
-    [Route("plan")]
+    [Route("plano")]
     [Produces("application/json")]
     public class PlanController : ControllerBase
     {
@@ -33,6 +34,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("detail/vip")]
         public IActionResult VipDetail()
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(PlanService.VipDetail(PlanConnector));
         }
         /// <summary>
@@ -42,6 +47,10 @@ namespace api_target_desafio.Controllers
         [HttpPost("manage")]
         public IActionResult VipManager(PlanModel instance)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(PlanService.VipManager(PlanConnector, instance));
         }
     }

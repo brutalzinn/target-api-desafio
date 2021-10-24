@@ -27,26 +27,31 @@ namespace api_target_desafio.Config
             }
             catch (Exception error)
             {
-                var response = context.Response;
-                response.ContentType = "application/json";
+                var Response = context.Response;
+                List<string> ErrorList = new List<string>();
+                Response.ContentType = "application/json";
 
                 switch (error)
                 {
                 //sqlServiceClassException error
-                    case SqlServiceException e:                    
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                    case SqlServiceException:                    
+                        Response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
                     case ModelValidatorException e:
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        
+                        Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        ErrorList = e.Errors;
                         break;
                     default:
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
+                if(error is not ModelValidatorException && error is not SqlServiceException)
+                {
+                    ErrorList.Add(error?.Message);
+                }
 
-                var result = JsonSerializer.Serialize(new { error = error?.Message });
-                await response.WriteAsync(result);
+                var result = JsonSerializer.Serialize(new { Error = ErrorList });
+                await Response.WriteAsync(result);
             }
         }
     }

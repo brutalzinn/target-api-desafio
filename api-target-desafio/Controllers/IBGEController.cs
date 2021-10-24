@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using api_target_desafio.Config;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
@@ -26,6 +27,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("uf")]
         public IActionResult Uf()
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(Task.Run(() => GetEstados()).Result);
         }
         /// <summary>
@@ -36,6 +41,10 @@ namespace api_target_desafio.Controllers
         [HttpGet("cidade/{uf}")]
         public IActionResult Distrito(string uf)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ModelValidatorException(ModelState);
+            }
             return Ok(Task.Run(() => GetDistritos(uf)).Result);
 
         }
