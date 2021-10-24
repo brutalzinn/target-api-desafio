@@ -47,7 +47,7 @@ namespace api_target_desafio.Services
                 Dictionary<string, string> dic = new Dictionary<string, string>();
                 dic.Add("VipModel_Id", cliente.Vip_Id.ToString());
 
-                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{cliente.Cliente_Id}'");
+                string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{cliente.Cliente_Id}'");
 
                 result = Task.Run(() => instance.Query(query)).Result;
             }

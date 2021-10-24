@@ -89,29 +89,6 @@ namespace api_target_desafio.SqlConnector.Connectors
             return false;
         }
 
-        //public async Task<object> ReadCustom(string query)
-        //{
-        //    List<object> list = new List<object>();
-
-        //    await Connection.OpenAsync();
-        //    using (SqlCommand command = new SqlCommand(query, Connection))
-        //    {
-        //        using (SqlDataReader reader = await command.ExecuteReaderAsync())
-        //        {
-        //            while (await reader.ReadAsync())
-        //            {
-
-        //                for (var i = 0; i < reader.FieldCount; i++)
-        //                {
-        //                    list.Add(reader[i]);
-        //                }
-        //            }
-        //        }
-        //    }
-           
-        //    await Connection.CloseAsync();
-
-        //    return list;
-        //}
+        
     }
 }

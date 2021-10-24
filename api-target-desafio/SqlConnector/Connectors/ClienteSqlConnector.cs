@@ -94,7 +94,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                     dic.Add("CPF", pessoaInstance.CPF);
                     dic.Add("DataNascimento", pessoaInstance.DataNascimento.ToString("yyyy-MM-dd"));
 
-                    string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{pessoa.Id}'");
+                    string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{pessoa.Id}'");
 
 
                     SqlCommand command = new SqlCommand(query, Connection);
@@ -125,6 +125,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                         FinanceiroSqlConnector financeiroSqlConnector = new FinanceiroSqlConnector(sConnection);
                         enderecoModel = await enderecoSqlConnector.InsertRelation(pessoaInstance.Endereco);
                         financeiroModel = await financeiroSqlConnector.InsertRelation(pessoaInstance.Financeiro);
+                     
                     }
 
                     string commandText = "INSERT INTO ClienteModel (NomeCompleto,CPF,DataNascimento,EnderecoModel_Id,FinanceiroModel_Id) VALUES (@NOMECOMPLETO,@CPF,@DATANASCIMENTO,@ENDERECOMODEL,@FINANCEIROMODEL)";
@@ -153,7 +154,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 await Connection.OpenAsync();
                 string where = $"WHERE cli.DateCadastro BETWEEN '{start.ToString("yyyy - MM - dd")}' AND '{end.ToString("yyyy - MM - dd")}'";
                 string select = "SELECT cli.id, NomeCompleto, CPF, DataNascimento, DateCadastro";
-                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, select, where);
+                string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, select, where);
                 List<object> _List = new List<object>();
                 ClienteModel model;
                 using (SqlCommand command = new SqlCommand(query, Connection))
@@ -200,7 +201,7 @@ namespace api_target_desafio.SqlConnector.Connectors
             {
                 List<object> _List = new List<object>();
                 string isWhere = id != null ? "WHERE cli.Id=" + id : null;
-                string query = Utils.QueryBuilder(Utils.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, "SELECT cli.Id, NomeCompleto, CPF, DataNascimento", isWhere);
+                string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, "SELECT cli.Id, NomeCompleto, CPF, DataNascimento", isWhere);
                 await Connection.OpenAsync();
                 ClienteModel model = null;
                 using (SqlCommand command = new SqlCommand(query, Connection))

@@ -13,93 +13,13 @@ namespace api_target_desafio.SqlConnector
     {
         private static Dictionary<string, string> tables = new Dictionary<string, string>()
             {
-                {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
-                {"FinanceiroModel", "fina.Id,RendaMensal" }
+                {"EnderecoModel", "Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+                {"FinanceiroModel", "RendaMensal" }
             };
-        public enum QueryBuilderEnum
-        {
-            UPDATE = 0,
-            SELECT = 1,
-            INSERT = 2,
-            SELECT_JOIN = 3
-        }
-
+      
        
 
-        public static string QueryBuilder(QueryBuilderEnum type, string ModelName, Dictionary<string, string> columns, string select = null, string condition = null)  
-        {
-            StringBuilder SQL_BUILDER = new StringBuilder();
-
-            switch (type) {
-// QUERY UPDATE
-                case QueryBuilderEnum.UPDATE:
-                    SQL_BUILDER.Append($"UPDATE {ModelName} SET ");
-                    foreach (var item in columns)
-                    {
-                        SQL_BUILDER.Append($"{item.Key} = '{item.Value}',");
-                    }
-                    SQL_BUILDER.Remove(SQL_BUILDER.Length - 1, 1);
-                    if (condition != null)
-                    {
-                        SQL_BUILDER.Append($" {condition}");
-                    }
-                    break;
-//  QUERY FOR INSERT
-                case QueryBuilderEnum.INSERT:
-                    SQL_BUILDER.Append($"INSERT INTO {ModelName} (");
-                    foreach (var item in columns)
-                    {
-                        SQL_BUILDER.Append($"{item.Key},");
-                    }
-                    SQL_BUILDER.Remove(SQL_BUILDER.Length - 1, 1);
-                    SQL_BUILDER.Append(") VALUES (");
-                    foreach (var item in columns)
-                    {
-                        SQL_BUILDER.Append($"{item.Value},");
-                    }
-                    SQL_BUILDER.Append(")");
-                    break;
-// QUERY FOR SELECT
-                case QueryBuilderEnum.SELECT:
-                    SQL_BUILDER.Append($"SELECT ");
-                    foreach (var item in columns)
-                    {
-                        SQL_BUILDER.Append($"{item.Key},");
-                    }
-                    SQL_BUILDER.Remove(SQL_BUILDER.Length - 1, 1);
-                    SQL_BUILDER.Append($" FROM {ModelName}");
-                    if (condition != null)
-                    {
-                        SQL_BUILDER.Append($" {condition}");
-                    }
-                    break;
-// QUERY SELECT JOIN
-
-
-                case QueryBuilderEnum.SELECT_JOIN:
-                    StringBuilder _SQL_NAMES = new StringBuilder();
-                    string uniqueModel = ModelName.ToLower().Substring(0, 3);
-                    _SQL_NAMES.Append($"{select},");
-                    foreach (var item in columns)
-                    {
-                        string name = item.Key.ToLower().Substring(0, 5);
-                        SQL_BUILDER.Append($" INNER JOIN {item.Key} AS {name} ON {name}.Id = {uniqueModel}.{item.Key}_Id");
-                        _SQL_NAMES.Append($"{name}.Id, {item.Value},");
-                    }
-                    _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);             
-                    string query = $"{_SQL_NAMES} FROM {ModelName} AS {uniqueModel} {SQL_BUILDER}";
-                    SQL_BUILDER.Clear();
-                    SQL_BUILDER.Append(query);
-                    if (condition != null)
-                    {
-                        SQL_BUILDER.Append($" {condition}");
-                    }
-                    break;
-            }
-            Debug.WriteLine($"BUILDERJOIN {SQL_BUILDER}");
-
-            return SQL_BUILDER.ToString();
-        }
+       
         public static async Task<object> ReadCustom(SqlConnection Connection, string Condition, string ModelName)
         {
 
