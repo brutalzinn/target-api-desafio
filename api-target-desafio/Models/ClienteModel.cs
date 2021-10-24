@@ -26,11 +26,11 @@ namespace api_target_desafio
     }
     public ClienteModel(SqlDataReader reader)
     {
-            Id = (int) reader[$"{GetNameId()}.Id"];
-            NomeCompleto = reader[$"{GetNameId()}.NomeCompleto"].ToString();
-            CPF = reader[$"{GetNameId()}.CPF"].ToString();
-            DataNascimento = Convert.ToDateTime(reader[$"{GetNameId()}.DataNascimento"]);
-            DateCadastro = Convert.ToDateTime(reader[$"{GetNameId()}.DateCadastro"]);
+            Id = (int) reader[$"{GetNameId()}Id"];
+            NomeCompleto = reader[$"{GetNameId()}NomeCompleto"].ToString();
+            CPF = reader[$"{GetNameId()}CPF"].ToString();
+            DataNascimento = Convert.ToDateTime(reader[$"{GetNameId()}DataNascimento"]);
+            DateCadastro = Convert.ToDateTime(reader[$"{GetNameId()}DateCadastro"]);
      }
     [Key]
     public int Id { get; set; }

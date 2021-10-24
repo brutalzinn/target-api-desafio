@@ -1,4 +1,5 @@
-﻿using System;
+﻿using api_target_desafio.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;

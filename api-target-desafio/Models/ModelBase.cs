@@ -12,7 +12,7 @@ namespace api_target_desafio.Models
 
         public virtual string GetNameId()
         {
-            return GetName().ToLower().Substring(0, 3);
+            return GetName().ToLower().Substring(0, 5);
         }
  
         public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);

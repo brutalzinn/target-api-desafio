@@ -27,11 +27,12 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
+                ClienteModel model = new ClienteModel();
                 List<object> _List = new List<object>();
-                string isWhere = id != null ? "WHERE cli.Id=" + id : null;
-                string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, "SELECT cli.Id, NomeCompleto, CPF, DataNascimento", isWhere);
+                string isWhere = id != null ? $"WHERE {model.GetNameId()}.Id=" + id : null;
+                string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, $"Id, NomeCompleto, CPF, DataNascimento, DateCadastro", isWhere);
                 await Connection.OpenAsync();
-                ClienteModel model = null;
+                
                 using (SqlCommand command = new SqlCommand(query, Connection))
                 {
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -47,7 +48,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                                     model.Endereco = new EnderecoModel(reader);
 
                                     
-                                    model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+                                    model.Financeiro = new FinanceiroModel(reader);
                                     _List.Add(model);
                                 }
 
@@ -57,23 +58,9 @@ namespace api_target_desafio.SqlConnector.Connectors
                                 if (await reader.ReadAsync())
                                 {
 
-                                    model = new ClienteModel();
-
-                                    model.Id = reader.GetInt32(0);
-                                    model.NomeCompleto = reader.GetString(1);
-                                    model.CPF = reader.GetString(2);
-                                    model.DataNascimento = reader.GetDateTime(3);
-
-                                    model.Endereco = new EnderecoModel();
-
-                                    model.Endereco.Id = reader.GetInt32(4);
-                                    model.Endereco.Logradouro = reader.GetString(5);
-                                    model.Endereco.Bairro = reader.GetString(6);
-                                    model.Endereco.Cidade = reader.GetString(7);
-                                    model.Endereco.UF = reader.GetString(8);
-                                    model.Endereco.CEP = reader.GetString(9);
-                                    model.Endereco.Complemento = reader.GetString(10);
-                                    model.Financeiro = new FinanceiroModel(reader.GetInt32(11), reader.GetDecimal(12));
+                                    model = new ClienteModel(reader);                                 
+                                    model.Endereco = new EnderecoModel(reader);                               
+                                    model.Financeiro = new FinanceiroModel(reader);
 
                                 }
                                 await Connection.CloseAsync();
@@ -185,12 +172,13 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
+                ClienteModel model = new ClienteModel();
+
                 await Connection.OpenAsync();
-                string where = $"WHERE cli.DateCadastro BETWEEN '{start.ToString("yyyy - MM - dd")}' AND '{end.ToString("yyyy - MM - dd")}'";
-                string select = "SELECT cli.id, NomeCompleto, CPF, DataNascimento, DateCadastro";
+                string where = $"WHERE {model.GetNameId()}.DateCadastro BETWEEN '{start.ToString("yyyy - MM - dd")}' AND '{end.ToString("yyyy - MM - dd")}'";
+                string select = "Id, NomeCompleto, CPF, DataNascimento, DateCadastro";
                 string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, select, where);
                 List<object> _List = new List<object>();
-                ClienteModel model;
                 using (SqlCommand command = new SqlCommand(query, Connection))
                 {
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())

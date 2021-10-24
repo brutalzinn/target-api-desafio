@@ -1,12 +1,12 @@
 ﻿using api_target_desafio.Models;
 using api_target_desafio.Models.Plans;
+using api_target_desafio.Responses;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace api_target_desafio.SqlConnector.Connectors
 {
     public class PlanSqlConnector : SqlBase
@@ -18,7 +18,85 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-      
+
+        public async Task<VipModel> SelectAnyVipPlan()
+        {
+            try
+            {
+                string query = $"SELECT TOP 1 Id, Nome, Preco, Descricao FROM VipModel ORDER BY NEWID()";
+
+                VipModel vipModel = null;
+               
+                    await Connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand(query, Connection))
+                    {
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                vipModel = new VipModel(reader.GetString(1), reader.GetDecimal(2));
+
+                                vipModel.Id = reader.GetInt32(0);
+                                vipModel.Descricao = reader.GetString(3);
+                            }
+                        }
+                    }
+                await Connection.CloseAsync();
+
+                return vipModel;
+            }
+            catch (AggregateException)
+            {
+
+
+                return null;
+            }
+        }
+        public async Task<object> GetPlanoInfo()
+        {
+            try
+            {
+                string CanBeVips = "SELECT Count(*) as CanBeVips FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal >= 6000";
+                string Vips = "SELECT Count(*) as Vips FROM ClienteModel WHERE VipModel_Id is not null";
+                string NonCanBeVips = "SELECT Count(*) as NonCanBeVips FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal < 6000";
+                string query = QueryBuilder.QueryConcat(CanBeVips, Vips, NonCanBeVips);
+                VipInfo vipModel = null;
+                
+                await Connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand(query, Connection))
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        vipModel = new VipInfo();
+
+                        if (await reader.ReadAsync())
+                        {
+                            vipModel.CanBeVips = (int)reader["CanBeVips"];
+                        }
+                        reader.NextResult();
+                        if (await reader.ReadAsync())
+                        {
+                            vipModel.Vips = (int)reader["Vips"];
+                        }
+                        reader.NextResult();
+                        if (await reader.ReadAsync())
+                        {
+                            vipModel.NonCanBeVips = (int)reader["NonCanBeVips"];
+                        }
+                    }
+                }
+                await Connection.CloseAsync();
+
+                return vipModel;
+            }
+            catch (AggregateException)
+            {
+
+
+                return null;
+            }
+        }
 
         public override async Task<bool> Insert(object model)
         {
@@ -29,7 +107,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 {
                     string commandText = "INSERT INTO VipModel (Nome, Preco, Descricao) VALUES (@NOME,@PRECO,@DESCRICAO)";
                     SqlCommand command = new SqlCommand(commandText, Connection);
-                    command.Parameters.Add(new SqlParameter($"@NOME", vipInstance.Name));
+                    command.Parameters.Add(new SqlParameter($"@NOME", vipInstance.Nome));
                     command.Parameters.Add(new SqlParameter($"@PRECO", vipInstance.Preco));
                     command.Parameters.Add(new SqlParameter($"@DESCRICAO", vipInstance.Descricao));
                     await Connection.OpenAsync();
@@ -44,22 +122,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return false;
             }
         }
-        public override async Task<bool> Query(string query)
-        {
-            try
-            {
-                SqlCommand command = new SqlCommand(query, Connection);
-                await Connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
-                await Connection.CloseAsync();
-                return true;
-            }
-            catch (AggregateException)
-            {
-                return false;
-            }
-          
-        }
+   
 
         public async Task<bool> ClienteProporcionalPlans(string plan,string query)
         {
@@ -85,7 +148,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 SQL_BUILDER.Append("UPDATE VipModel SET ");
                 if (body is VipModel vipModelInstance)
                 {
-                    SQL_BUILDER.Append($"Name = '{vipModelInstance.Name}',");
+                    SQL_BUILDER.Append($"Name = '{vipModelInstance.Nome}',");
                     SQL_BUILDER.Append($"Preco = '{vipModelInstance.Preco}',");
                     SQL_BUILDER.Append($"Descricao = '{vipModelInstance.Descricao}' ");
                 }
@@ -105,7 +168,7 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             List<VipModel> _List = new List<VipModel>();
             string isWhere = id != null ? " WHERE Id=@ID" : "";
-            string commandText = $"SELECT Id, Name, Preco, Descricao FROM VipModel" + isWhere;
+            string commandText = $"SELECT Id, Nome, Preco, Descricao FROM VipModel" + isWhere;
             await Connection.OpenAsync();
             using (SqlCommand command = new SqlCommand(commandText, Connection))
             {

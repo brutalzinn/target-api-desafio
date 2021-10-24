@@ -43,20 +43,7 @@ namespace api_target_desafio.Controllers
             return Ok(FinanceiroService.CompareMin(FinanceiroConnector, min,max));
         }
 
-        /// <summary>
-        /// Exibir quantidade de usuários compatíveis com o benefício de VIP.
-        /// </summary>
-        /// <returns>Retorna a quantidade de usuários compatíveis com o VIP</returns>
-        /// 
-        [HttpGet("vips/count")]
-        public IActionResult VipsCount()
-        {
-            if (!ModelState.IsValid)
-            {
-                throw new ModelValidatorException(ModelState);
-            }
-            return Ok(FinanceiroService.GetVips(FinanceiroConnector));
-        }
+  
 
     }
 }

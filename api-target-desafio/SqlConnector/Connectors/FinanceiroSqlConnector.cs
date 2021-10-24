@@ -10,11 +10,7 @@ namespace api_target_desafio.SqlConnector.Connectors
 {
     public class FinanceiroSqlConnector : SqlBase
     {
-              private Dictionary<string, string> tables = new Dictionary<string, string>()
-            {
-                {"EnderecoModel", "ende.Id,Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
-                {"FinanceiroModel", "fina.Id,RendaMensal" }
-            };
+           
         public FinanceiroSqlConnector()
         {
 
@@ -23,7 +19,11 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             Config(conn);
         }
-      
+        private static Dictionary<string, string> tables = new Dictionary<string, string>()
+            {
+                {"EnderecoModel", "Logradouro,Bairro,Cidade,UF,CEP,Complemento" },
+                {"FinanceiroModel", "RendaMensal" }
+            };
 
 
         public override async Task<int> InsertRelation(object model)
@@ -62,13 +62,50 @@ namespace api_target_desafio.SqlConnector.Connectors
                 await Connection.CloseAsync();
                 return true;
             }
-            catch (Exception e)
+            catch (AggregateException)
             {
                 return false;
             }
 
         }
 
+        public  async Task<object> CompareMin(decimal min, decimal? max)
+        {
+
+            string where = max != null ? $"WHERE RendaMensal BETWEEN {min} AND {max}" : $"WHERE RendaMensal >= {min}";
+            string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, $"Id, NomeCompleto, CPF, DataNascimento, DateCadastro", where);
+
+            List<object> _List = new List<object>();
+            ClienteModel model = null;
+            try
+            {
+                await Connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand(query, Connection))
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+
+                        while (await reader.ReadAsync())
+                        {
+                            model = new ClienteModel(reader);
+                            model.Endereco = new EnderecoModel(reader);
+                            model.Financeiro = new FinanceiroModel(reader);
+                            _List.Add(model);
+                        }
+
+
+                    }
+                }
+                await Connection.CloseAsync();
+
+                return _List;
+             }
+            catch (AggregateException)
+            {
+                return null;
+            }
+        }
         public override async Task<bool> Insert(object model)
         {
             if (model is EnderecoModel enderecoInstance)

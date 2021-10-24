@@ -12,6 +12,10 @@ namespace api_target_desafio.Responses
             NonCanBeVips = nonCanBeVips;
         }
 
+        public VipInfo()
+        {
+
+        }
         public int CanBeVips { get; set; }
 
         public int Vips { get; set; }

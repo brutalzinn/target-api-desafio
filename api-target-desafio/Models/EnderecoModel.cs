@@ -24,13 +24,13 @@ namespace api_target_desafio.Models
         }
         public EnderecoModel(SqlDataReader reader)
         {
-            Id = (int)reader[$"{GetNameId()}.Id"];
-            Logradouro = reader[$"{GetNameId()}.Logradouro"].ToString();
-            Bairro = reader[$"{GetNameId()}.Bairro"].ToString();
-            Cidade = reader[$"{GetNameId()}.Cidade"].ToString();
-            UF = reader[$"{GetNameId()}.UF"].ToString();
-            CEP = reader[$"{GetNameId()}.CEP"].ToString();
-            Complemento = reader[$"{GetNameId()}.Complemento"].ToString();
+            Id = (int)reader[$"{GetNameId()}Id"];
+            Logradouro = reader[$"{GetNameId()}Logradouro"].ToString();
+            Bairro = reader[$"{GetNameId()}Bairro"].ToString();
+            Cidade = reader[$"{GetNameId()}Cidade"].ToString();
+            UF = reader[$"{GetNameId()}UF"].ToString();
+            CEP = reader[$"{GetNameId()}CEP"].ToString();
+            Complemento = reader[$"{GetNameId()}Complemento"].ToString();
         }
 
         [Key]

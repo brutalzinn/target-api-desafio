@@ -16,8 +16,8 @@ namespace api_target_desafio.Models
         }
         public FinanceiroModel(SqlDataReader reader)
         {
-            Id = (int)reader[$"{GetNameId()}.Id"];
-            RendaMensal = decimal.Round((decimal)reader[$"{GetNameId()}.RendaMensal"], 2, MidpointRounding.AwayFromZero); 
+            Id = (int)reader[$"{GetNameId()}Id"];
+            RendaMensal = decimal.Round((decimal)reader[$"{GetNameId()}RendaMensal"], 2, MidpointRounding.AwayFromZero); 
         }
         public int Id { get; set; }
         public decimal RendaMensal { get; set; }

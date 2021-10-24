@@ -13,34 +13,32 @@ namespace api_target_desafio.Services
     {
 
 
-
-        public static VipModel VipDetail(PlanSqlConnector instance)
+        public static object GetPlanoInfo(PlanSqlConnector instance, int? id)
         {
-            int VipModelExists = (int)Task.Run(() => Utils.Count(instance.Config(), "", "VipModel")).Result;
-            if (VipModelExists == 0)
+            object result = Task.Run(() => instance.GetPlanoInfo()).Result;
+            if (result == null)
             {
-                for (var i = 1; i < 5; i++)
-                {
-                    VipModel _vip = new VipModel($"Vip {i}", 50M);
-
-                    if (Task.Run(() => instance.Insert(_vip)).Result)
-                    {
-                        Debug.WriteLine("TRUE");
-                    }
-                }
+                string error = id != null ? $"Cant find Plan with id {id}" : $"Cant find any Plans.";
+                throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, error);
             }
-
-            // VipInfo vipInfo = new VipInfo();
-
-            // return Task.Run(() => instance.Insert(_vip)).Result)
-            return null;
+            return result;
         }
 
-        public static object VipManager(PlanSqlConnector instance, PlanModel cliente)
-        {
-            //  VipModel _vip = new VipModel("Vip");
 
-            int ClientelExists = (int)Task.Run(() => Utils.Count(instance.Config(), $"WHERE ID = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
+        public static object GetPlano(PlanSqlConnector instance, int? id)
+        {
+            object result =  Task.Run(() => instance.Read(id)).Result;
+            if (result == null)
+            {
+                string error = id != null ? $"Cant find Plan with id {id}" : $"Cant find any Plans.";
+                throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, error);
+            }
+            return result;
+        }
+
+        public static object PlanoManager(PlanSqlConnector instance, PlanModel cliente)
+        {
+            int ClientelExists = (int)Task.Run(() => GenericUtils.Count(instance.Config(), $"WHERE ID = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
             if(ClientelExists == 0)
             {
                 throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, $"Client not found. Cant set vip to client with id {cliente.Cliente_Id}.");
@@ -54,6 +52,7 @@ namespace api_target_desafio.Services
 
                 result = Task.Run(() => instance.Query(query)).Result;
             }
+
             var _vipResponse = new VipUpdate(result, "Thanks for accept us vip plan.");
 
             return _vipResponse;

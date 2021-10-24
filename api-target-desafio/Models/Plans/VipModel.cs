@@ -8,7 +8,7 @@ namespace api_target_desafio.Models.Plans
     {
 
         public int Id {  get; set; } 
-        public string Name { get; set; }
+        public string Nome { get; set; }
 
         public decimal Preco { get; set; } = 50M;
 
@@ -16,7 +16,7 @@ namespace api_target_desafio.Models.Plans
         public VipModel(SqlDataReader reader)
         {
             Id = (int)reader["Id"];
-            Name = reader["Name"].ToString();
+            Nome = reader["Nome"].ToString();
             Preco = decimal.Round((decimal)reader["Preco"], 2, MidpointRounding.AwayFromZero);  
             Descricao = reader["Descricao"].ToString();
 
@@ -24,7 +24,7 @@ namespace api_target_desafio.Models.Plans
 
         public VipModel(string name, decimal preco)
         {
-            Name = name;
+            Nome = name;
             Descricao = GetDescricao();
             Preco = decimal.Round(preco, 2, MidpointRounding.AwayFromZero);
 

@@ -40,7 +40,7 @@ namespace api_target_desafio.Services
                 return result;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

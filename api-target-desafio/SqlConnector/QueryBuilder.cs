@@ -71,19 +71,32 @@ namespace api_target_desafio.SqlConnector
             }           
             return SQL_BUILDER.ToString();
         }
+        private static string SpliterSeparator(string ModelId, string words)
+        {
+            StringBuilder TABLE_COLUMNS = new StringBuilder();
+            words = words.Replace(" ", "");
+            for (var i = 0; i < words.Split(',').Length; i++)
+            {
+                TABLE_COLUMNS.Append($"{ModelId}.{words.Split(',')[i]} AS {ModelId}{words.Split(',')[i]},");
 
+            }
+            return TABLE_COLUMNS.ToString();
+        }
         private static string QuerySelectJoin(string ModelName, Dictionary<string, string> columns, string select = null, string condition = null)
         {
             StringBuilder SQL_BUILDER = new StringBuilder();
             StringBuilder _SQL_NAMES = new StringBuilder();
-            string uniqueModel = ModelName.ToLower().Substring(0, 3);
-            _SQL_NAMES.Append($"{select},");
+            string uniqueModel = ModelName.ToLower().Substring(0, 5);
+            var modelColumns = SpliterSeparator(uniqueModel,select);
+            _SQL_NAMES.Append($"SELECT {modelColumns}");
             foreach (var item in columns)
             {
                 string name = item.Key.ToLower().Substring(0, 5);
-                SQL_BUILDER.Append($" INNER JOIN {item.Key} AS {name} ON {name}.Id = {uniqueModel}.{item.Key}_Id");
-                _SQL_NAMES.Append($"{name}.Id, {item.Value},");
+                SQL_BUILDER.Append($" INNER JOIN {item.Key} AS {name} ON {name}.Id = {uniqueModel}.{item.Key}_Id");          
+                _SQL_NAMES.Append($"{name}.Id AS {name}Id, {SpliterSeparator(name,item.Value)}");
+                
             }
+         
             _SQL_NAMES.Remove(_SQL_NAMES.Length - 1, 1);
             string query = $"{_SQL_NAMES} FROM {ModelName} AS {uniqueModel} {SQL_BUILDER}";
             SQL_BUILDER.Clear();
