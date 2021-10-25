@@ -57,9 +57,9 @@ namespace api_target_desafio.SqlConnector.Connectors
         {
             try
             {
-                string CanBeVips = "SELECT Count(*) as CanBeVips FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal >= 6000";
-                string Vips = "SELECT Count(*) as Vips FROM ClienteModel WHERE VipModel_Id is not null";
-                string NonCanBeVips = "SELECT Count(*) as NonCanBeVips FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal < 6000";
+                string CanBeVips = "SELECT cli.id FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal >= 6000";
+                string Vips = "SELECT Id FROM ClienteModel WHERE VipModel_Id is not null";
+                string NonCanBeVips = "SELECT cli.id FROM ClienteModel as cli INNER JOIN FinanceiroModel as fin ON fin.Id = cli.FinanceiroModel_Id WHERE fin.RendaMensal < 6000";
                 string query = QueryBuilder.QueryConcat(CanBeVips, Vips, NonCanBeVips);
                 VipInfo vipModel = null;
                 
@@ -70,24 +70,27 @@ namespace api_target_desafio.SqlConnector.Connectors
                     {
                         vipModel = new VipInfo();
 
-                        if (await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            vipModel.CanBeVips = (int)reader["CanBeVips"];
+                            vipModel.CanBeVipsList.Add((int)reader["Id"]);
                         }
                         reader.NextResult();
-                        if (await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            vipModel.Vips = (int)reader["Vips"];
+                            vipModel.VipsList.Add((int)reader["Id"]);
                         }
                         reader.NextResult();
-                        if (await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            vipModel.NonCanBeVips = (int)reader["NonCanBeVips"];
+                           vipModel.NonCanBeVipsList.Add((int)reader["Id"]);
                         }
                     }
                 }
                 await Connection.CloseAsync();
 
+                vipModel.NonCanBeVips = vipModel.NonCanBeVipsList.Count;
+                vipModel.Vips = vipModel.VipsList.Count;
+                vipModel.CanBeVips = vipModel.CanBeVipsList.Count;
                 return vipModel;
             }
             catch (AggregateException)
