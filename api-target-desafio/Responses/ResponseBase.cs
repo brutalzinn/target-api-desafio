@@ -2,6 +2,6 @@
 {
     public abstract class ResponseBase
     {
-        public abstract string GetResponse();
+        public abstract object GetResponse();
     }
 }

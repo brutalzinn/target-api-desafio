@@ -19,14 +19,17 @@ namespace api_target_desafio.Responses
         public List<int> NonCanBeVipsList { get; set; } = new List<int>();
 
 
-        public int CanBeVips { get; set; }
+        public int CountCanBeVips { get; set; }
 
-        public int Vips { get; set; }
+        public int CountVips { get; set; }
 
-        public int NonCanBeVips { get; set; }
-        public override string GetResponse()
+        public int CountNonCanBeVips { get; set; }
+        public override object GetResponse()
         {
-            return JsonSerializer.Serialize(new { CanBeVips, Vips, NonCanBeVips });
+            CountNonCanBeVips = NonCanBeVipsList.Count;
+            CountVips = VipsList.Count;
+            CountCanBeVips = CanBeVipsList.Count;
+            return new { NonCanBeVipsList, VipsList, CanBeVipsList,CountCanBeVips, CountVips, CountNonCanBeVips };
         }
     }
 

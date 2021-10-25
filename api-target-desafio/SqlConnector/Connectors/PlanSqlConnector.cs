@@ -88,10 +88,8 @@ namespace api_target_desafio.SqlConnector.Connectors
                 }
                 await Connection.CloseAsync();
 
-                vipModel.NonCanBeVips = vipModel.NonCanBeVipsList.Count;
-                vipModel.Vips = vipModel.VipsList.Count;
-                vipModel.CanBeVips = vipModel.CanBeVipsList.Count;
-                return vipModel;
+               
+                return vipModel.GetResponse();
             }
             catch (AggregateException)
             {

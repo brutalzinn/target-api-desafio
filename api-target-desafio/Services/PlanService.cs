@@ -35,7 +35,7 @@ namespace api_target_desafio.Services
             }
             return result;
         }
-
+        // need refactor here - 25/10/2021
         public static object PlanoManager(PlanSqlConnector instance, PlanModel cliente)
         {
             int ClientelExists = (int)Task.Run(() => GenericUtils.Count(instance.Config(), $"WHERE ID = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
