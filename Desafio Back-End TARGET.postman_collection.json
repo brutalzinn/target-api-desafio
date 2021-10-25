@@ -74,14 +74,72 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/plan/detail/vip",
+							"raw": "{{url}}/plano/detail/vip/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"plan",
+								"plano",
 								"detail",
-								"vip"
+								"vip",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get vip count",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/plano/detalhe",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"plano",
+								"detalhe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change vip",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "API-KEY",
+								"value": "28236d8ec201df516d0f6472d516d72d",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Aceito\":false,\r\n    \"Cliente_Id\":1,\r\n    \"Vip_Id\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/plano/manage",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"plano",
+								"manage"
 							]
 						}
 					},
@@ -104,15 +162,15 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/date/19-10-2021/23-10-2021",
+							"raw": "{{url}}/cliente/date/10-10-2021/12-12-2021",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
+								"cliente",
 								"date",
-								"19-10-2021",
-								"23-10-2021"
+								"10-10-2021",
+								"12-12-2021"
 							]
 						}
 					},
@@ -130,14 +188,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/financeiro/renda/5999/7000",
+							"raw": "{{url}}/financeiro/renda/100/7000",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"financeiro",
 								"renda",
-								"5999",
+								"100",
 								"7000"
 							]
 						}
@@ -156,14 +214,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/financeiro/vips/count",
+							"raw": "{{url}}/plano/detalhe",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"financeiro",
-								"vips",
-								"count"
+								"plano",
+								"detalhe"
 							]
 						}
 					},
@@ -184,7 +241,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"NomeCompleto\":\"Bernando Oliveira\",\r\n    \"CPF\":\"0000000000\",\r\n    \"DataNascimento\":\"16-02-1932\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"Logradouro\",\r\n    \"bairro\": \"Bairro\",\r\n    \"cidade\": \"Cidade\",\r\n    \"uf\": \"RJ\",\r\n    \"cep\": \"21500-060\",\r\n    \"complemento\": \"Complemento\"\r\n  },\r\n  \"financeiro\": {\r\n    \"rendaMensal\": 5999\r\n  }\r\n}",
+					"raw": "{\r\n    \"NomeCompleto\":\"Adalbeto Banonoso\",\r\n    \"CPF\":\"17168089790\",\r\n    \"DataNascimento\":\"16-02-2000\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"Rua Sargento Edgard Pinto\",\r\n    \"bairro\": \"Pavuna\",\r\n    \"cidade\": \"Rio de Janeiro\",\r\n    \"uf\": \"RJ\",\r\n    \"cep\": \"21520060\",\r\n    \"complemento\": \"Complemento\"\r\n  },\r\n  \"financeiro\": {\r\n    \"rendaMensal\": 3\r\n  }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -192,12 +249,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/user",
+					"raw": "{{url}}/cliente",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"user"
+						"cliente"
 					]
 				}
 			},
@@ -216,7 +273,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"NomeCompleto\":\"rwrwrwr Paes\",\r\n    \"CPF\":\"17168089790\",\r\n    \"DataNascimento\":\"2019-01-06\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"teste\",\r\n    \"bairro\": \"Bairrdfgdgddfgdgo\",\r\n    \"cidade\": \"Cidade\",\r\n    \"uf\": \"SP\",\r\n    \"cep\": \"21520-060\",\r\n    \"complemento\": \"Complemento\"\r\n  }\r\n}",
+					"raw": "{\r\n    \"NomeCompleto\":\"testando Oliveira\",\r\n    \"CPF\":\"17168089790\",\r\n    \"DataNascimento\":\"16-02-2000\",\r\n    \"endereco\": {\r\n    \"logradouro\": \"Rua Sargento Edgard Pinto\",\r\n    \"bairro\": \"Pavuna\",\r\n    \"cidade\": \"Rio de Janeiro\",\r\n    \"uf\": \"RJ\",\r\n    \"cep\": \"21520-060\",\r\n    \"complemento\": \"\"\r\n  }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -224,13 +281,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/user/4",
+					"raw": "{{url}}/cliente/1",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"user",
-						"4"
+						"cliente",
+						"1"
 					]
 				}
 			},
@@ -248,13 +305,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/user/3",
+					"raw": "{{url}}/cliente",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"user",
-						"3"
+						"cliente"
 					]
 				}
 			},
@@ -264,15 +320,21 @@
 			"name": "get pessoa id",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "API-KEY",
+						"value": "28236d8ec201df516d0f6472d516d72d",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{url}}/user/2",
+					"raw": "{{url}}/cliente/50",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"user",
-						"2"
+						"cliente",
+						"50"
 					]
 				}
 			},
