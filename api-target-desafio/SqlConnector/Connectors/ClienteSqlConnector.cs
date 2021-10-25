@@ -31,6 +31,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 List<object> _List = new List<object>();
                 string isWhere = id != null ? $"WHERE {model.GetNameId()}.Id=" + id : null;
                 string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.SELECT_JOIN, "ClienteModel", tables, $"Id, NomeCompleto, CPF, DataNascimento, DateCadastro", isWhere);
+                model = null;
                 await Connection.OpenAsync();
                 
                 using (SqlCommand command = new SqlCommand(query, Connection))
@@ -57,11 +58,11 @@ namespace api_target_desafio.SqlConnector.Connectors
                             case not null:
                                 if (await reader.ReadAsync())
                                 {
-
-                                    model = new ClienteModel(reader);                                 
-                                    model.Endereco = new EnderecoModel(reader);                               
-                                    model.Financeiro = new FinanceiroModel(reader);
-
+                                  
+                                        model = new ClienteModel(reader);
+                                        model.Endereco = new EnderecoModel(reader);
+                                        model.Financeiro = new FinanceiroModel(reader);
+                                    
                                 }
                                 await Connection.CloseAsync();
 
@@ -115,7 +116,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                     dic.Add("CPF", pessoaInstance.CPF);
                     dic.Add("DataNascimento", pessoaInstance.DataNascimento.ToString("yyyy-MM-dd"));
 
-                    string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.UPDATE, "ClienteModel", dic, $"WHERE ID = '{pessoa.Id}'");
+                    string query = QueryBuilder.Query(QueryBuilder.QueryBuilderEnum.UPDATE, "ClienteModel", dic, condition: $"WHERE Id ={pessoa.Id}");
 
 
                     SqlCommand command = new SqlCommand(query, Connection);
@@ -127,7 +128,7 @@ namespace api_target_desafio.SqlConnector.Connectors
                 return true;
 
             }
-            catch (AggregateException e)
+            catch (AggregateException)
             {
                 return false;
             }

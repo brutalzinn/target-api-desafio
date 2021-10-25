@@ -19,7 +19,8 @@ namespace api_target_desafio.Services
             try
             {
                 HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync($"http://viacep.com.br/ws/{CepValidator.Salinizator(cep)}/json/");
+                cep = CepValidator.Salinizator(cep);
+                HttpResponseMessage response = await client.GetAsync($"http://viacep.com.br/ws/{cep}/json/");
                 var json = await response.Content.ReadAsStringAsync();
                 CEPModel result = JsonSerializer.Deserialize<CEPModel>(json);
                 return result;

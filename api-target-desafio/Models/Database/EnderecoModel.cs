@@ -22,7 +22,11 @@ namespace api_target_desafio.Models
             CEP = cEP;
             Complemento = complemento;
         }
-        public EnderecoModel(SqlDataReader reader)
+        public EnderecoModel()
+        {
+
+        }
+            public EnderecoModel(SqlDataReader reader)
         {
             Id = (int)reader[$"{GetNameId()}Id"];
             Logradouro = reader[$"{GetNameId()}Logradouro"].ToString();
@@ -56,7 +60,7 @@ namespace api_target_desafio.Models
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             //fun moment to validate fields
-            CepModelError cepModelError = Task.Run(() => CepValidator.CheckCep(this)).Result;
+            CepModelError cepModelError = (CepModelError)Task.Run(() => CepValidator.CheckCep(this)).Result;
             string result = "";
             if (cepModelError != null && !cepModelError.Validade())
             {
@@ -76,12 +80,15 @@ namespace api_target_desafio.Models
                 {
                     result = "Error on Bairro field";
                 }
+                yield return new ValidationResult(result);
+
             }
-            else
+            else if(cepModelError == null)
             {
                 result = "Invalid CEP. Check the cep field.";
+                yield return new ValidationResult(result);
+
             }
-            yield return new ValidationResult(result);
 
         }
     }

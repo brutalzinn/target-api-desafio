@@ -45,7 +45,7 @@ namespace api_target_desafio.Config
                         Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
-                if(error is not ModelValidatorException && error is not SqlServiceException)
+                if(error is not ModelValidatorException)
                 {
                     ErrorList.Add(error?.Message);
                 }

@@ -21,8 +21,12 @@ namespace api_target_desafio.Models.Plans
             Descricao = reader["Descricao"].ToString();
 
         }
+        public VipModel()
+        {
 
-        public VipModel(string name, decimal preco)
+        }
+
+            public VipModel(string name, decimal preco)
         {
             Nome = name;
             Descricao = GetDescricao();

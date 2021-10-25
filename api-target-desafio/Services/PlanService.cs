@@ -38,7 +38,7 @@ namespace api_target_desafio.Services
         // need refactor here - 25/10/2021
         public static object PlanoManager(PlanSqlConnector instance, PlanModel cliente)
         {
-            int ClientelExists = (int)Task.Run(() => GenericUtils.Count(instance.Config(), $"WHERE ID = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
+            int ClientelExists = (int)Task.Run(() => GenericUtils.Count(instance.Config(), $"WHERE Id = '{cliente.Cliente_Id}'", "ClienteModel")).Result;
             if(ClientelExists == 0)
             {
                 throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, $"Client not found. Cant set vip to client with id {cliente.Cliente_Id}.");

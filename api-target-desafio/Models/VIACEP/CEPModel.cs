@@ -5,6 +5,7 @@
         //via cep model
         public string cep { get; set; }
 
+        public bool erro { get; set; }
         public string logradouro { get; set; }
 
         public string complemento { get; set; }

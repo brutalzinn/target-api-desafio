@@ -21,7 +21,7 @@ namespace api_target_desafio.Controllers
 {
 
     [ApiController]
-    [Route("user")]
+    [Route("cliente")]
     [Produces("application/json")]
 
     public class ClienteController : ControllerBase

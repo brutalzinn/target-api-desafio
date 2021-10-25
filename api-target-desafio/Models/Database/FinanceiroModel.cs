@@ -14,6 +14,11 @@ namespace api_target_desafio.Models
             
             Id = id;
         }
+
+        public FinanceiroModel()
+        {
+      
+        }
         public FinanceiroModel(SqlDataReader reader)
         {
             Id = (int)reader[$"{GetNameId()}Id"];

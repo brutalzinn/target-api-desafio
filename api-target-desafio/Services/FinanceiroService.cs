@@ -12,8 +12,7 @@ namespace api_target_desafio.Services
 
         public static object CompareMin(FinanceiroSqlConnector connector,decimal min, decimal? max)
         {
-            object result = Task.Run(() => connector.CompareMin(min, max)).Result;
-
+            object result = Task.Run(() => connector.CompareMin(min, max)).Result;         
             if (result == null)
             {
                 throw new SqlServiceException(System.Net.HttpStatusCode.NotFound, "Cant find any clients.");

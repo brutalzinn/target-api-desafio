@@ -48,10 +48,14 @@ namespace api_target_desafio.Validators
 
         }
 
-        public static async Task<CepModelError> CheckCep(EnderecoModel endereco)
+        public static async Task<object> CheckCep(EnderecoModel endereco)
         {
+            if(endereco == null)
+            {
+                return null;
+            }
             CEPModel ViaCepModel = await VIACepService.GetCep(endereco.CEP);
-            if (ViaCepModel == null || endereco == null)
+            if (ViaCepModel == null || ViaCepModel.erro)
             {
                 return null;
             }

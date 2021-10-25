@@ -65,11 +65,6 @@ namespace api_target_desafio
                 yield return new ValidationResult(
                    $"INVALID CPF. PLEASE, REWRITE IT."); 
             }
-            if (Financeiro == null)
-            {
-                yield return new ValidationResult(
-                  $"NO FINANCES DATA DETECTED ON YOUR BODY REQUEST.");
-            }
             if (Endereco == null)
             {
                 yield return new ValidationResult(

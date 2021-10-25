@@ -99,8 +99,9 @@ namespace api_target_desafio.SqlConnector.Connectors
                 }
                 await Connection.CloseAsync();
 
-                return _List;
-             }
+                return _List.Count != 0 ? _List : null;
+
+            }
             catch (AggregateException)
             {
                 return null;
