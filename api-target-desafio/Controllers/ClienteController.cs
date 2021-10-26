@@ -154,6 +154,7 @@ namespace api_target_desafio.Controllers
         /// <response code="400">Retorna um feedback sobre um cliente que não conseguiu efetuar o cadastro.</response>    
         /// <returns>Um novo cliente cadastrado</returns>
         [HttpGet("{id?}")]
+
         public IActionResult Get(int? id)
         {
             if (!ModelState.IsValid)

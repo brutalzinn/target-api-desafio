@@ -5,15 +5,14 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace api_target_desafio.Swagger
+namespace api_target_desafio.Swagger.Filters
 {
     public class SwaggerAuthentication : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
-
-            
+          
                 if (operation.Parameters == null)
                     operation.Parameters = new List<OpenApiParameter>();
 

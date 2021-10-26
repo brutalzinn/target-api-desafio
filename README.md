@@ -1,15 +1,22 @@
-# Api Target Desafio - Em construção
+# Api Target Desafio
 
 Essa é uma api que desenvolvi para o desafio da target pagamentos. Com o objetivo de executar um CRUD utilizando Microsoft SQL Server como banco de dados e uma api web com netcore 5.0. 
 
 Requerimentos:
 
 - NetCore runtime 5.0
-- Microsoft SQL Server
+- Microsoft SQL Server 2017
+- Cliente para o Microsoft SQL Server(DBeaver,Microsoft SQL Server Management..)
 
-# Instalação:
+# Instalação sem Docker:
 
-Clone esse repositório, entre na pasta api-target-desafio, crie um arquivo appsettings.json e adicione essas linhas: 
+1. Instale o Microsoft SQL Server. E configure seu login e senha.
+
+2. Instale o cliente para o Microsoft SQL Server da sua preferência. 
+
+3. Clone esse repositório na pasta da sua preferência.
+
+4. Entre na pasta onde o repositório foi clonado, e entre na pasta api-target-desafio. Crie um arquivo appsettings.json e adicione essas linhas: 
 
 ```
 {
@@ -28,16 +35,64 @@ Clone esse repositório, entre na pasta api-target-desafio, crie um arquivo apps
 
 ```
 
+5. Abra o seu cliente e se conecte ao Microsoft SQL Server como administrador.
+
+6. Acesse a pasta scripts.
+
+7. Copie tudo que está dentro do arquivo targetapi.sql e cole em uma query no seu cliente. Ou importe o arquivo targetapi.sql e execute.
+
+8. Com a IDE da sua preferência, ou com o próprio visual studio, abra o arquivo api-target-desafio.sln e rode o projeto. Aguarde uma página da web abrir a documentação do Swagger.
+
+9. Api está rodando. Você pode testar todas as rotas pelo próprio swagger.
+
+
+# Instalação com Docker:
+
+1. Clone esse repositório na pasta da sua preferência.
+
+2. Abra a pasta do repositório clonado. Com o Docker instalado e o docker compose, execute o comando:
+```
+$ docker-compose up
+```
+3. Instale o cliente para o Microsoft SQL Server da sua preferência. 
+
+4. Entre na pasta onde o repositório foi clonado, e entre na pasta api-target-desafio. Crie um arquivo appsettings.json e adicione essas linhas: 
+
+```
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "app_target_api": "Server=localhost;Database=targetapidb;Integrated Security=false;User ID=sa;Password=iWadTqCC,!Aw"
+  }
+}
+```
+
+5. Abra o seu cliente e se conecte ao Microsoft SQL Server como administrador. Utilize o login ```sa``` e senha ``` iWadTqCC,!Aw ```
+
+6. Acesse a pasta scripts.
+
+7. Copie tudo que está dentro do arquivo targetapi.sql e cole em uma query no seu cliente. Ou importe o arquivo targetapi.sql e execute.
+
+8. Com a IDE da sua preferência, ou com o próprio visual studio, abra o arquivo api-target-desafio.sln e rode o projeto. Aguarde uma página da web abrir a documentação do Swagger.
+
+9. Api está rodando. Você pode testar todas as rotas pelo próprio swagger.
+
+
+# Dados do Swagger com explicação para cada rota.
+
 # Api Target Desafio
 Api que desenvolvi para o desafio da target pagamentos. <3
 
 ## Version: v1
 
-**Contact information:**  
-Roberto Caneiro Paes  
-https://github.com/brutalzinn  
-
-### /user
+### /cliente
 
 #### POST
 ##### Sumário:
@@ -76,84 +131,32 @@ Exemplo de resposta(400) :
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| api-key | header | API-KEY | Yes | string |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
 | 200 | Retorna um feedback sobre o cliente cadastrado. |
 | 400 | Retorna um feedback sobre um cliente que não conseguiu efetuar o cadastro. |
 
-### /user/{id}
+### /cliente/{id}
 
 #### GET
 ##### Sumário:
 
 Listar clientes ou exibir apenas um único cliente.
 
-##### Descrição:
-
-Exemplo de resposta(200) - cliente renda superior ou igual a 6000 reais:
-
-    GET /user/1
-    
-    {
-    "id": 1,
-    "nomeCompleto": "Fernando Paes",
-    "cpf": "177.811.940-98",
-    "dataNascimento": "2019-01-06T02:00:00Z",
-    "dateCadastro": "0001-01-01T02:00:00Z",
-    "dateModificado": "0001-01-01T02:00:00Z",
-    "endereco": {
-        "id": 1,
-        "logradouro": "ARSO 23 Alameda 4",
-        "bairro": "Plano Diretor Sul",
-        "cidade": "Palmas",
-        "uf": "TO",
-        "cep": "770153-14",
-        "complemento": "Complemento"
-     },
-     "financeiro": {
-         "id": 1,
-        "rendaMensal": 350.50
-      }
-      }
-
-    GET /user
-    
-    [{
-    "id": 1,
-    "nomeCompleto": "Fernando Paes",
-    "cpf": "177.811.940-98",
-    "dataNascimento": "2019-01-06T02:00:00Z",
-    "dateCadastro": "0001-01-01T02:00:00Z",
-    "dateModificado": "0001-01-01T02:00:00Z",
-    "endereco": {
-        "id": 1,
-        "logradouro": "ARSO 23 Alameda 4",
-        "bairro": "Plano Diretor Sul",
-        "cidade": "Palmas",
-        "uf": "TO",
-        "cep": "770153-14",
-        "complemento": "Complemento"
-     },
-     "financeiro": {
-         "id": 1,
-        "rendaMensal": 350.50
-      }
-      }]
-
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| id | path |  | Yes | integer |
-| api-key | header | API-KEY | Yes | string |
+| id | path | id is optional parameter | No | integer |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
@@ -171,19 +174,19 @@ Atualização de cliente.
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| id | path |  | Yes | integer |
-| api-key | header | API-KEY | Yes | string |
+| id | path |  | Sim | integer |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
 | 200 | Success |
 | 400 | Retorna um feedback sobre um cliente que não conseguiu efetuar a atualização. |
 
-### /user/date/{datestart}/{dateend}
+### /cliente/date/{datestart}/{dateend}
 
 #### GET
 ##### Sumário:
@@ -192,13 +195,13 @@ Listar clientes cadastrados por um período de datas
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| datestart | path |  | Yes | dateTime |
-| dateend | path |  | Yes | dateTime |
-| api-key | header | API-KEY | Yes | string |
+| datestart | path |  | Sim | dateTime |
+| dateend | path |  | Sim | dateTime |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
@@ -213,28 +216,13 @@ Retorna todos os clientes com base em um valor de RendaMensal mínimo ou ambos a
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| min | path |  | Yes | double |
-| max | path |  | Yes | double |
-| api-key | header | API-KEY | Yes | string |
+| min | path |  | Sim | double |
+| max | path | max is optional parameter | No | double |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
-
-| Código | Descrição |
-| ---- | ----------- |
-| 200 | Success |
-
-### /financeiro/vips/count
-
-#### GET
-##### Parâmetros
-
-| Name | Located in | Descrição | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| api-key | header | API-KEY | Yes | string |
-
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
@@ -249,11 +237,11 @@ Retorna todos os estados da API do IBGE.
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| api-key | header | API-KEY | Yes | string |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
@@ -268,31 +256,74 @@ Retorna todos os municípios de um estado específico da API do IBGE.
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| uf | path | Id do estado | Yes | string |
-| api-key | header | API-KEY | Yes | string |
+| uf | path | Id do estado | Sim | string |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |
 | 200 | Success |
 
-### /plan/detail/vip
+### /plano/detalhe
 
 #### GET
 ##### Sumário:
 
 Exibir quantidade de usuários compatíveis com o benefício de VIP.
+Exibir quantidade de usuários com o benefício de VIP.
+Exibir quantidade de usuários que são VIPS.
+Exibir todos os ids de usuários para cada tipo de classificação.
 
 ##### Parâmetros
 
-| Name | Located in | Descrição | Required | Schema |
+| Name | Localizado em | Descrição | Requerido | Esquema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| api-key | header | API-KEY | Yes | string |
+| id | query |  | No | integer |
+| api-key | header | API-KEY | Sim | string |
 
-##### Responses
+##### Respostas
+
+| Código | Descrição |
+| ---- | ----------- |
+| 200 | Success |
+
+### /plano/vip/{id}
+
+#### GET
+##### Sumário:
+
+Exibir detalhe de um determinado plano vip.
+
+##### Parâmetros
+
+| Name | Localizado em | Descrição | Requerido | Esquema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | id is optional parameter | No | integer |
+| api-key | header | API-KEY | Sim | string |
+
+##### Respostas
+
+| Código | Descrição |
+| ---- | ----------- |
+| 200 | Success |
+
+### /plano/manage
+
+#### POST
+##### Sumário:
+
+Rota utilizada para o cliente confirmar o uso do plano VIP
+
+##### Parâmetros
+
+| Name | Localizado em | Descrição | Requerido | Esquema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| api-key | header | API-KEY | Sim | string |
+
+##### Respostas
 
 | Código | Descrição |
 | ---- | ----------- |

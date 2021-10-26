@@ -28,9 +28,10 @@ namespace api_target_desafio.Controllers
         }
 
         /// <summary>
-        /// Exibir quantidade de usuários compatíveis com o benefício de VIP.
+        ///  Exibir quantidade de usuários compatíveis com o benefício de VIP.
         ///  Exibir quantidade de usuários com o benefício de VIP.
         ///  Exibir quantidade de usuários que são VIPS.
+        ///  Exibir todos os ids de usuários para cada tipo de classificação.
         /// </summary>
         /// <returns>Retorna a quantidade de usuários que não são compatíveis com o VIP</returns>
         [HttpGet("detalhe")]
@@ -60,7 +61,7 @@ namespace api_target_desafio.Controllers
         /// <summary>
         /// Rota utilizada para o cliente confirmar o uso do plano VIP
         /// </summary>
-        /// <returns>Retorna um feedback da api.</returns>
+        /// <returns>Retorna uma resposta da api.</returns>
         [HttpPost("manage")]
         public IActionResult PlanoManager(PlanModel instance)
         {

@@ -38,7 +38,8 @@ namespace api_target_desafio
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.OperationFilter<Swagger.SwaggerAuthentication>();
+                c.OperationFilter<Swagger.Filters.SwaggerAuthentication>();
+                c.OperationFilter<Swagger.Filters.ReApplyOptionalRouteParameter>();
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Target Desafio", Version = "v1",
                     Description = "Api que desenvolvi para o desafio da target pagamentos. <3",
@@ -81,7 +82,7 @@ namespace api_target_desafio
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Doc - Api Target Desafio v1"));
             }
             //app.Map("/user", UserMiddleware);
-
+         
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
@@ -95,6 +96,8 @@ namespace api_target_desafio
             {
                 endpoints.MapControllers();
             });
+
+        
 
         }
     }
